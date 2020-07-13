@@ -1,0 +1,51 @@
+<!--
+  ~ Copyright 2018 The app Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="tts_headingCorrectionEnabled"
+                app:title="@string/settings_voice_guidance_heading_correction" />
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="tts_decisionPointEnabled"
+                app:title="@string/settings_voice_guidance_decision" />
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="tts_hazardEnabled"
+                app:title="@string/settings_voice_guidance_hazard" />
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="tts_landmarkEnabled"
+                app:title="@string/settings_voice_guidance_landmark" />
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="tts_segmentEnabled"
+                app:title="@string/settings_voice_guidance_segment" />
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="tts_reassuranceEnabled"
+                app:title="@string/settings_voice_guidance_reassurance" />
+        <ListPreference
+                app:defaultValue="15"
+                app:entries="@array/settings_voice_guidance_reassurance_distance_names"
+                app:entryValues="@array/voice_guidance_reassurance_values"
+                app:key="tts_reassuranceDistance"
+                app:title="@string/settings_voice_guidance_reassurance_distance"
+                app:summary="%s"/>
+
+</PreferenceScreen>

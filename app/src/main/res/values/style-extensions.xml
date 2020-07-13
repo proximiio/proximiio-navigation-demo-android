@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="fabForegroundColor" format="reference" />
+    <attr name="fabBackgroundColor" format="reference" />
+    <attr name="fabBackgroundDisabledColor" format="reference" />
+    <attr name="searchExpandIconColor" format="reference" />
+    <attr name="searchResultEndIconColor" format="reference" />
+    <attr name="locationPinBackgroundColor" format="reference" />
+    <attr name="locationPinForegroundColor" format="reference" />
+    <attr name="stepsBackgroundColor" format="reference" />
+    <attr name="timeBackgroundColor" format="reference" />
+    <attr name="tripBackgroundColor" format="reference" />
+    <attr name="locationDescriptionBackgroundColor" format="reference" />
+    <attr name="userLocationMarkerColor1" format="reference" />
+    <attr name="userLocationMarkerColor2" format="reference" />
+    <attr name="userLocationMarkerColor3" format="reference" />
+    <attr name="buttonBackgroundNegative"/>
+    <attr name="buttonBackgroundPositive"/>
+    <attr name="buttonBackgroundNeutral"/>
+    <attr name="buttonTextColor"/>
+    <attr name="buttonHighlight"/>
+
+    <attr name="exploreNearbyServiceCounterColor"/>
+    <attr name="exploreNearbyServiceCafeteriaColor"/>
+    <attr name="exploreNearbyServiceLiftColor"/>
+    <attr name="exploreNearbyServiceWaitingAreaColor"/>
+    <attr name="exploreNearbyServiceWashroomsColor"/>
+    <attr name="exploreNearbyServiceParkingColor"/>
+    <attr name="exploreNearbyServiceReceptionColor"/>
+    <attr name="exploreNearbyServiceOfficesColor"/>
+    <attr name="exploreNearbyServiceMeetingRoomColor"/>
+    <attr name="exploreNearbyServiceEntranceColor"/>
+    <attr name="exploreNearbyServiceExitColor"/>
+    <attr name="exploreNearbyDefaultColor"/>
+
+    <attr name="preferenceDropdownMultilineDividerColor"/>
+
+    <attr name="appbarTextColor"/>
+    <attr name="loadingOverlayBackground"/>
+
+    <attr name="colorFloorSpinner"/>
+    <attr name="colorFloorSpinnerItemSelected"/>
+    <attr name="sosButtonBackgroundColor"/>
+    <attr name="sosButtonTextColor"/>
+    <attr name="searchBackgroundColor"/>
+    <attr name="exploreNearbyTitleColor"/>
+    <attr name="searchItemTitleColor"/>
+    <attr name="searchItemTextColor"/>
+    <attr name="searchItemBackgroundColor"/>
+    <attr name="exploreNearbyForegroundColor"/>
+    <attr name="exploreNearbyTextColor"/>
+    <attr name="searchBarBackgroundColor"/>
+    <attr name="searchBarTextColor"/>
+    <attr name="searchBarHintColor"/>
+
+    <attr name="searchBarChipBackgroundColor"/>
+    <attr name="searchBarChipTextColor"/>
+    <attr name="searchBarChipButtonColor"/>
+
+    <attr name="iconForegroundColor"/>
+    <attr name="searchItemNavigationButtonColor"/>
+    <attr name="searchItemNavigationButtonTextTint"/>
+    <attr name="searchItemDescriptionBackgroundColor"/>
+    <attr name="searchItemDescriptionTextColor"/>
+    <attr name="searchItemDetailTextColor"/>
+    <attr name="searchItemDetailTitleColor"/>
+    <attr name="routePreviewBackgroundColor"/>
+    <attr name="defaultTextColor"/>
+    <attr name="routePreviewStartColor"/>
+    <attr name="routePreviewTripColor"/>
+    <attr name="routePreviewCancelColor"/>
+    <attr name="routePreviewButtonTextColor"/>
+    <attr name="routePreviewTitleTextColor"/>
+    <attr name="routePreviewChipTextColor"/>
+    <attr name="routePreviewChipBackgroundColor"/>
+    <attr name="routePreviewBorderColor"/>
+    <attr name="routePreviewDestinationColor"/>
+    <attr name="routePreviewDestinationHoleColor"/>
+    <attr name="routePreviewStepColor"/>
+    <attr name="routePreviewCurrentPositionMarker"/>
+
+    <attr name="navigationGuidanceBackgroundColor"/>
+    <attr name="navigationGuidanceTextColor"/>
+    <attr name="navigationGuidanceIconColor"/>
+    <attr name="navigationHeadingBackgroundColor"/>
+    <attr name="navigationHeadingTextColor"/>
+    <attr name="navigationHazardBackgroundColor"/>
+    <attr name="navigationHazardTextColor"/>
+    <attr name="navigationSegmentBackgroundColor"/>
+    <attr name="navigationSegmentTextColor"/>
+
+    <attr name="dialogBackgroundColor"/>
+    <attr name="iconLimitedFunctionalityColor"/>
+    <attr name="iconLimitedFunctionalityFillColor"/>
+    <attr name="iconBluetoothColor"/>
+    <attr name="iconBluetoothFillColor"/>
+    <attr name="iconAccessibilityColor"/>
+    <attr name="iconAccessibilityFillColor"/>
+
+
+</resources>

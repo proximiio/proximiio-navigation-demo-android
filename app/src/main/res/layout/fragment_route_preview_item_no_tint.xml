@@ -1,0 +1,44 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="io.proximi.navigationdemo.ui.main.fragments.routepreview.RoutePreviewFragment">
+
+
+    <ImageView
+            android:id="@+id/stepImageView"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+    <TextView
+            android:id="@+id/stepTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="?attr/defaultTextColor"
+            app:layout_constraintBottom_toBottomOf="@+id/stepImageView"
+            app:layout_constraintStart_toEndOf="@+id/stepImageView"
+            app:layout_constraintTop_toTopOf="@+id/stepImageView"
+            tools:text="@string/guidance_turn_right" />
+
+    <com.google.android.material.chip.Chip
+            android:id="@+id/stepCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textColor="?attr/routePreviewChipTextColor"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            app:chipBackgroundColor="?attr/routePreviewChipBackgroundColor"
+            app:chipCornerRadius="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/stepTextView"
+            app:layout_constraintTop_toBottomOf="@+id/stepTextView"
+            tools:text="15 steps" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

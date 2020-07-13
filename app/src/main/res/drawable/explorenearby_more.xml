@@ -1,0 +1,17 @@
+<vector android:height="128dp" android:viewportHeight="1800"
+    android:viewportWidth="1800" android:width="128dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+            android:pivotX="900"
+            android:pivotY="900"
+            android:scaleX="0.75"
+            android:scaleY="0.75">
+        <path android:fillColor="?attr/exploreNearbyDefaultColor"
+            android:pathData="M738,1790c-261,-47 -499,-216 -622,-441 -84,-153 -116,-278 -116,-449 0,-130 19,-235 63,-340 109,-265 319,-453 593,-532 68,-20 102,-23 244,-23 128,1 179,5 230,19 335,93 586,358 654,688 20,97 20,280 1,372 -70,328 -316,594 -637,687 -81,23 -325,35 -410,19z" android:strokeColor="#00000000"/>
+        <path android:fillColor="?attr/exploreNearbyForegroundColor"
+            android:pathData="M554,990c-35,-14 -64,-59 -64,-101 0,-115 162,-148 207,-42 38,92 -51,180 -143,143z" android:strokeColor="#00000000"/>
+        <path android:fillColor="?attr/exploreNearbyForegroundColor"
+            android:pathData="M848,983c-72,-46 -69,-148 7,-188 103,-56 206,78 128,165 -35,39 -95,49 -135,23z" android:strokeColor="#00000000"/>
+        <path android:fillColor="?attr/exploreNearbyForegroundColor"
+            android:pathData="M1158,985c-31,-17 -58,-62 -58,-95 0,-54 57,-110 112,-110 30,0 84,33 98,61 18,32 6,98 -23,126 -30,31 -92,39 -129,18z" android:strokeColor="#00000000"/>
+    </group>
+</vector>

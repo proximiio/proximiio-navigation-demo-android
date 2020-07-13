@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        tools:context="io.proximi.navigationdemo.ui.searchitem.SearchItemDetailActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:fillViewport="true">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:clipToPadding="false"
+                app:layout_constraintDimensionRatio="@dimen/search_item_detail_recycler_ratio"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/activity_search_item_detail_image_item" />
+
+        <TextView
+                android:id="@+id/featureNameBottomTextView"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="?attr/searchItemDetailTitleColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                tools:text="Feature Name" />
+
+        <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/featureNameBottomTextView"
+                app:layout_constraintTop_toBottomOf="@+id/featureNameBottomTextView"
+                app:srcCompat="@drawable/ic_location_pin_circle" />
+
+        <TextView
+                android:id="@+id/levelTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="?attr/searchItemDetailTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/imageView2"
+                tools:text="1st floor" />
+
+        <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@+id/imageView2"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                app:srcCompat="@drawable/ic_steps_circle" />
+
+        <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3"
+                app:srcCompat="@drawable/ic_time_circle" />
+
+        <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="8dp"
+                android:padding="2dp"
+                app:layout_constraintStart_toStartOf="@+id/imageView7"
+                app:layout_constraintTop_toBottomOf="@+id/imageView7"
+                app:srcCompat="@drawable/ic_trip_circle" />
+
+        <ImageView
+                android:id="@+id/descriptionImageView"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="16dp"
+                android:padding="2dp"
+                app:layout_constraintStart_toStartOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/tripButtonLayout"
+                app:srcCompat="@drawable/ic_location_description_circle" />
+
+        <TextView
+                android:id="@+id/stepsTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/search_item_detail_calculating_steps"
+                android:textColor="?attr/searchItemDetailTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                app:layout_constraintEnd_toEndOf="@+id/levelTextView"
+                app:layout_constraintStart_toStartOf="@+id/levelTextView"
+                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+        <TextView
+                android:id="@+id/openHoursTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/searchItemDetailTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView7"
+                app:layout_constraintEnd_toEndOf="@+id/levelTextView"
+                app:layout_constraintStart_toStartOf="@+id/levelTextView"
+                app:layout_constraintTop_toTopOf="@+id/imageView7"
+                tools:text="Open 5:00 to 8:00" />
+
+        <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/search_item_round_background"
+                android:padding="16dp"
+                android:textColor="?attr/searchItemDescriptionTextColor"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionLabelTextView"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+                tools:visibility="visible" />
+
+        <LinearLayout
+                android:id="@+id/tripButtonLayout"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="52dp"
+                android:background="@drawable/button_rounded"
+                android:backgroundTint="?attr/searchItemNavigationButtonColor"
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:showDividers="middle"
+                app:backgroundTint="?attr/searchItemNavigationButtonColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+
+            <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_item_detail_my_trip"
+                    android:textAlignment="center"
+                    android:textColor="?attr/searchItemNavigationButtonTextTint" />
+
+            <TextView
+                    android:id="@+id/routeAccessibleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_item_detail_calculating_steps"
+                    android:textAlignment="center"
+                    android:textColor="?attr/searchItemNavigationButtonTextTint"
+                    android:textSize="18sp"
+                    tools:text="50 Steps" />
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/textView6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/search_item_detail_trip"
+                android:textColor="?attr/searchItemDetailTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintEnd_toEndOf="@+id/openHoursTextView"
+                app:layout_constraintStart_toStartOf="@+id/openHoursTextView"
+                app:layout_constraintTop_toTopOf="@+id/imageView" />
+
+        <TextView
+                android:id="@+id/descriptionLabelTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/search_item_detail_location_description"
+                android:textColor="?attr/searchItemDetailTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/descriptionImageView"
+                app:layout_constraintEnd_toEndOf="@+id/textView6"
+                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintTop_toTopOf="@+id/descriptionImageView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

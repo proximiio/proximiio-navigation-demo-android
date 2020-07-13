@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:orientation="vertical"
+        app:cardBackgroundColor="?attr/searchItemBackgroundColor"
+        app:cardCornerRadius="24dp">
+
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--            android:id="@+id/cardView"-->
+    <!--            android:layout_width="80dp"-->
+    <!--            android:layout_height="80dp"-->
+    <!--            android:layout_marginStart="16dp"-->
+    <!--            android:layout_marginLeft="16dp"-->
+    <!--            android:layout_marginTop="8dp"-->
+    <!--            android:layout_marginEnd="16dp"-->
+    <!--            android:layout_marginRight="16dp"-->
+    <!--            android:padding="0dp"-->
+    <!--            app:cardBackgroundColor="@color/colorAccent"-->
+    <!--            app:cardCornerRadius="40dp"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--    </androidx.cardview.widget.CardView>-->
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        <ImageView
+                android:id="@+id/itemImageView"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:background="#cccccc"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+                android:id="@+id/itemNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center_horizontal"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:singleLine="true"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="?attr/searchItemTitleColor"
+                tools:text="Waiting area" />
+
+        <TextView
+                android:id="@+id/itemFloorTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textColor="?attr/searchItemTextColor"
+                android:textSize="16sp" />
+
+        <TextView
+                android:id="@+id/itemDistanceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:paddingStart="8dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="4dp"
+                android:text="20 - 50 steps"
+                android:textAlignment="center"
+                android:textColor="?attr/searchItemTextColor" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

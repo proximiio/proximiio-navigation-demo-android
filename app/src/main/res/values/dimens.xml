@@ -1,0 +1,18 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="search_item_min_width">180dp</dimen>
+    <dimen name="nearby_item_min_width">120dp</dimen>
+    <dimen name="fragment_search_input_margin">16dp</dimen>
+    <dimen name="freagment_search_input_margin_bottom">8dp</dimen>
+
+    <item name="search_item_detail_recycler_ratio" format="float" type="dimen">2.2</item>
+    <item name="search_item_detail_recycler_image_ratio" format="float" type="dimen">1.77778</item>
+
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="circle_icon_padding">8dp</dimen>
+
+</resources>

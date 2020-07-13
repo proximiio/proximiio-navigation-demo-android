@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_compass" />
+    <item>
+        <rotate android:fromDegrees="45" android:pivotX="50%" android:pivotY="50%">
+            <shape android:shape="line">
+                <stroke android:width="4dp" android:color="#000000" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

@@ -1,0 +1,290 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:animateLayoutChanges="true"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/summaryView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/route_preview_background"
+            android:orientation="horizontal"
+            tools:context="io.proximi.navigationdemo.ui.main.fragments.routepreview.RoutePreviewFragment">
+
+        <com.omega_r.libs.OmegaCenterIconButton
+                android:id="@+id/startRouteButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded"
+                android:drawableStart="@drawable/ic_navigation"
+                android:text="@string/route_preview_start"
+                android:textAllCaps="false"
+                android:textColor="?attr/routePreviewButtonTextColor"
+                app:backgroundTint="?attr/routePreviewStartColor"
+                app:layout_constraintBottom_toTopOf="@+id/moreButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <com.omega_r.libs.OmegaCenterIconButton
+                android:id="@+id/cancelRouteButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded"
+                android:drawableStart="@drawable/ic_navigation_cancel"
+                android:text="@string/route_preview_cancel"
+                android:textAllCaps="false"
+                android:textColor="?attr/routePreviewButtonTextColor"
+                app:backgroundTint="?attr/routePreviewCancelColor"
+                app:layout_constraintBottom_toBottomOf="@+id/moreButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/moreButton"
+                app:layout_constraintTop_toTopOf="@+id/moreButton" />
+
+        <com.omega_r.libs.OmegaCenterIconButton
+                android:id="@+id/moreButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded"
+                android:drawableStart="@drawable/ic_trip"
+                android:gravity="center"
+                android:text="@string/route_preview_steps_more"
+                android:textAllCaps="false"
+                android:textColor="?attr/routePreviewButtonTextColor"
+                app:backgroundTint="?attr/routePreviewTripColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cancelRouteButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/directionsView"
+                app:layout_constraintEnd_toStartOf="@+id/stepsTextView"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/ic_steps_circle" />
+
+        <ImageView
+                android:id="@+id/imageView11"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+                app:layout_constraintEnd_toStartOf="@+id/timeTextView"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toEndOf="@+id/view2"
+                app:layout_constraintTop_toTopOf="@+id/imageView10"
+                app:srcCompat="@drawable/ic_time_circle" />
+
+        <TextView
+                android:id="@+id/stepsTextView"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="?attr/routePreviewTitleTextColor"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+                app:layout_constraintEnd_toStartOf="@+id/view2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView10"
+                app:layout_constraintTop_toTopOf="@+id/imageView10"
+                tools:text="50 steps" />
+
+        <TextView
+                android:id="@+id/timeTextView"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="32dp"
+                android:textColor="?attr/routePreviewTitleTextColor"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView11"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView11"
+                app:layout_constraintTop_toTopOf="@+id/imageView11"
+                tools:text="12 mins" />
+
+        <LinearLayout
+                android:id="@+id/directionsView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/startRouteButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_max="320dp"
+                app:layout_constraintHeight_min="256dp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintVertical_weight="1"
+                tools:visibility="visible">
+
+            <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/route_preview_detailed_directions"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="?attr/routePreviewTitleTextColor" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/directionsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/fragment_route_preview_item" />
+        </LinearLayout>
+
+        <View
+                android:id="@+id/view2"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="-8dp"
+                android:layout_marginBottom="-8dp"
+                android:background="@color/colorRoutePreviewSeparator"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageView10" />
+
+        <View
+                android:id="@+id/view3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/colorRoutePreviewSeparator"
+                app:layout_constraintBottom_toTopOf="@+id/view2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+                android:id="@+id/fromTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/route_preview_from"
+                app:layout_constraintBottom_toTopOf="@+id/toTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+        <TextView
+                android:id="@+id/toTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/route_preview_to"
+                app:layout_constraintBottom_toTopOf="@+id/view3"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="left" />
+
+        <ImageView
+                android:id="@+id/fromImageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/fromTextView"
+                app:layout_constraintStart_toStartOf="@id/barrier"
+                app:layout_constraintTop_toTopOf="@+id/fromTextView"
+                app:srcCompat="?attr/routePreviewCurrentPositionMarker" />
+
+        <ImageView
+                android:id="@+id/toImageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/toTextView"
+                app:layout_constraintStart_toStartOf="@+id/fromImageView"
+                app:layout_constraintTop_toTopOf="@+id/toTextView"
+                app:srcCompat="@drawable/ic_preview_destination" />
+
+        <TextView
+                android:id="@+id/currentLocationTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:text="@string/route_preview_current_location"
+                android:textColor="?attr/defaultTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/fromTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fromImageView"
+                app:layout_constraintTop_toTopOf="@+id/fromTextView" />
+
+        <TextView
+                android:id="@+id/destinationTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
+                android:textColor="?attr/defaultTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/toTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/toImageView"
+                app:layout_constraintTop_toTopOf="@+id/toTextView"
+                tools:text="Lorem ipsum" />
+
+        <View
+                android:id="@+id/view4"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:background="?attr/routePreviewBorderColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier"
+                android:layout_width="5dp"
+                android:layout_height="0dp"
+                app:barrierDirection="end"
+                app:constraint_referenced_ids="fromTextView,toTextView"
+                tools:layout_editor_absoluteX="66dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

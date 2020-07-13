@@ -1,0 +1,131 @@
+<resources>
+
+    <!-- High contrast application theme. -->
+    <style name="HighContrastTheme" parent="Theme.AppCompat">
+
+        <item name="android:windowBackground">@color/black</item>
+        <item name="actionBarStyle">@style/HighContrastTheme.ActionBar</item>
+        <item name="appbarTextColor">@color/white</item>
+
+        <item name="buttonBackgroundNegative">@color/white</item>
+        <item name="buttonBackgroundPositive">@color/white</item>
+        <item name="buttonBackgroundNeutral">@color/white</item>
+        <item name="buttonHighlight">@color/blackHighlight</item>
+        <item name="buttonTextColor">@color/black</item>
+
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/yellowHighContrast</item>
+        <item name="colorFloorSpinner">@color/yellowHighContrast</item>
+        <item name="colorFloorSpinnerItemSelected">@color/black</item>
+
+        <item name="dialogBackgroundColor">@color/black</item>
+        <item name="defaultTextColor">@color/white</item>
+
+        <item name="fabBackgroundColor">@color/yellowHighContrast</item>
+        <item name="fabBackgroundDisabledColor">@color/gray</item>
+        <item name="fabForegroundColor">@color/black</item>
+
+        <item name="iconAccessibilityColor">@color/yellowHighContrast</item>
+        <item name="iconAccessibilityFillColor">@color/black</item>
+        <item name="iconBluetoothColor">@color/yellowHighContrast</item>
+        <item name="iconBluetoothFillColor">@color/black</item>
+        <item name="iconForegroundColor">@color/black</item>
+        <item name="iconLimitedFunctionalityColor">@color/yellowHighContrast</item>
+        <item name="iconLimitedFunctionalityFillColor">@color/black</item>
+
+        <item name="loadingOverlayBackground">@color/black</item>
+        <item name="locationDescriptionBackgroundColor">@color/yellowHighContrast</item>
+        <item name="locationPinBackgroundColor">@color/yellowHighContrast</item>
+
+        <item name="exploreNearbyForegroundColor">@color/black</item>
+        <item name="exploreNearbyDefaultColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceCounterColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceCafeteriaColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceLiftColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceWaitingAreaColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceWashroomsColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceParkingColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceReceptionColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceOfficesColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceMeetingRoomColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceEntranceColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyServiceExitColor">@color/yellowHighContrast</item>
+        <item name="exploreNearbyTextColor">@color/white</item>
+        <item name="exploreNearbyTitleColor">@color/white</item>
+
+        <item name="navigationGuidanceBackgroundColor">@color/yellowHighContrast</item>
+        <item name="navigationGuidanceTextColor">@color/black</item>
+        <item name="navigationGuidanceIconColor">@color/black</item>
+        <item name="navigationHazardBackgroundColor">@color/black</item>
+        <item name="navigationHazardTextColor">@color/yellowHighContrast</item>
+        <item name="navigationHeadingBackgroundColor">@color/black</item>
+        <item name="navigationHeadingTextColor">@color/white</item>
+        <item name="navigationSegmentBackgroundColor">@color/black</item>
+        <item name="navigationSegmentTextColor">@color/white</item>
+
+        <item name="preferenceDropdownMultilineDividerColor">@color/grayLight</item>
+
+        <item name="routePreviewBackgroundColor">@color/black</item>
+        <item name="routePreviewBorderColor">@color/yellowHighContrast</item>
+        <item name="routePreviewButtonTextColor">@color/black</item>
+        <item name="routePreviewCancelColor">@color/yellowHighContrast</item>
+        <item name="routePreviewChipBackgroundColor">@color/white</item>
+        <item name="routePreviewChipTextColor">@color/black</item>
+        <item name="routePreviewCurrentPositionMarker">@drawable/ic_current_position_high_contrast</item>
+        <item name="routePreviewDestinationColor">@color/yellowHighContrast</item>
+        <item name="routePreviewDestinationHoleColor">@color/black</item>
+        <item name="routePreviewStartColor">@color/yellowHighContrast</item>
+        <item name="routePreviewStepColor">@color/white</item>
+        <item name="routePreviewTripColor">@color/yellowHighContrast</item>
+        <item name="routePreviewTitleTextColor">@color/white</item>
+
+        <item name="searchBackgroundColor">@color/black</item>
+        <item name="searchBarBackgroundColor">@color/white</item>
+        <item name="searchBarTextColor">@color/black</item>
+        <item name="searchBarHintColor">@color/black</item>
+        <item name="searchBarChipBackgroundColor">@color/black</item>
+        <item name="searchBarChipTextColor">@color/white</item>
+        <item name="searchBarChipButtonColor">@color/white</item>
+        <item name="searchExpandIconColor">@color/yellowHighContrast</item>
+        <item name="searchResultEndIconColor">@color/yellowHighContrast</item>
+        <item name="searchItemNavigationButtonColor">@color/white</item>
+        <item name="searchItemNavigationButtonTextTint">@color/black</item>
+        <item name="searchItemDescriptionBackgroundColor">@color/black</item>
+        <item name="searchItemDescriptionTextColor">@color/black</item>
+        <item name="searchItemDetailTextColor">@color/white</item>
+        <item name="searchItemDetailTitleColor">@color/white</item>
+        <item name="searchItemTitleColor">@color/black</item>
+        <item name="searchItemTextColor">@color/black</item>
+        <item name="searchItemBackgroundColor">@color/white</item>
+        <item name="stepsBackgroundColor">@color/yellowHighContrast</item>
+
+        <item name="sosButtonBackgroundColor">@color/yellowHighContrast</item>
+        <item name="sosButtonTextColor">@color/black</item>
+
+        <item name="timeBackgroundColor">@color/yellowHighContrast</item>
+        <item name="tripBackgroundColor">@color/yellowHighContrast</item>
+
+    </style>
+
+    <style name="HighContrastTheme.Settings" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorAccent">#010101</item>
+        <item name="colorPrimary">#010101</item>
+        <item name="colorPrimaryDark">#010101</item>
+    </style>
+
+    <style name="HighContrastTheme.NoActionBar" parent="HighContrastTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="HighContrastTheme.ActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="titleTextStyle">@style/HighContrastTheme.ActionBar.Title</item>
+        <item name="buttonTint">@color/black</item>
+        <item name="backgroundColor">@color/black</item>
+    </style>
+
+    <style name="HighContrastTheme.ActionBar.Title" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/white</item>
+    </style>
+</resources>

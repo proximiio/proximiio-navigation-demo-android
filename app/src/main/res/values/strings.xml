@@ -1,0 +1,268 @@
+<resources>
+    <string name="app_name">Proximi.io Demo</string>
+    <string name="title_activity_main">Proximi.io Demo</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_help">Help</string>
+    <string name="title_activity_privacy_policy">Privacy policy</string>
+    <string name="title_activity_terms_of_service">Terms of service</string>
+    <string name="title_activity_about">About</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_settings">Settings</string>
+    <string name="emergency_phone" translatable="false">tel:+358403533131</string>
+
+    <!-- Common  -->
+    <string name="loading_overlay">Loading…</string>
+    <plurals name="step_count"><!-- add other quantities if required -->
+        <item quantity="one">%d step</item>
+        <item quantity="other">%d steps</item>
+    </plurals>
+
+    <plurals name="navigation_meters">
+        <item quantity="one">%d meter</item>
+        <item quantity="other">%d meters</item>
+    </plurals>
+
+    <plurals name="steps_left">
+        <item quantity="zero">%d steps left</item>
+        <item quantity="one">%d step left</item>
+        <item quantity="two">%d steps left</item>
+        <item quantity="few">%d steps left</item>
+        <item quantity="many">%d steps left</item>
+        <item quantity="other">%d steps left</item>
+    </plurals>
+
+    <plurals name="meters_left"><!-- add other quantities if required -->
+        <item quantity="one">%d meter left</item>
+        <item quantity="other">%d meters left</item>
+    </plurals>
+
+    <plurals name="navigation_minutes"><!-- add other quantities if required -->
+        <item quantity="one">minute</item>
+        <item quantity="other">minutes</item>
+    </plurals>
+
+    <plurals name="seconds"><!-- add other quantities if required -->
+        <item quantity="one">second</item>
+        <item quantity="other">seconds</item>
+    </plurals>
+
+    <string name="button_help">HELP</string>
+    <string name="floor_0">Ground Floor</string>
+    <string name="floor_1">1st Floor</string>
+    <string name="floor_2">2nd Floor</string>
+    <string name="floor_3">3rd Floor</string>
+    <string name="floor_4">4th Floor</string>
+    <string name="floor_5">5th Floor</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_limited_functionality_location_description">Without location information, we can’t show you where to go.\n\nTurn location on?</string>
+    <string name="dialog_limited_functionality_bluetooth_description">Without Bluetooth, we can’t show you where to go.\n\nTurn Bluetooth on?</string>
+    <string name="dialog_accessibility_description">This service is accessible to people with disabilities.\n\nGo to settings?</string>
+    <string name="dialog_not_covered">The place you\'re in isn\'t covered. Talk to someone in charge and recommend us.</string>
+
+    <!-- Limited functionality Fragment -->
+    <string name="dialog_help_title">Help</string>
+    <string name="dialog_help_description">Call location support staff?</string>
+    <string name="dialog_accept">Yes</string>
+    <string name="dialog_decline">No</string>
+    <string name="dialog_ok">OK</string>
+
+    <!-- Search floor names -->
+    <string name="search_item_level_0">Ground floor</string>
+    <string name="search_item_level_1">First floor</string>
+    <string name="search_item_level_2">Second floor</string>
+    <string name="search_item_level_3">Third floor</string>
+    <string name="search_item_level_4">Fourth floor</string>
+    <string name="search_item_level_5">Fifth floor</string>
+    <string name="search_item_level_unknown">Unknown floor</string>
+
+    <!-- Distance placeholders -->
+    <string name="search_item_distance_estimating">Estimating distance…</string>
+    <string name="search_item_distance_unknown">Route not found…</string>
+
+    <!-- Settings -->
+    <string name="settings_app">Location service</string>
+    <string name="settings_app_exit">Close the location service and exit the app</string>
+
+    <string name="settings_display">Display options</string>
+    <string name="settings_display_large_mode">Make icons bigger</string>
+    <string name="settings_display_high_contract_mode">High-contrast mode</string>
+    <string name="settings_display_heading">Navigation type</string>
+    <string-array name="settings_display_heading_names">
+        <item name="settings_display_heading_compass">Based on compass in my phone</item>
+        <item name="settings_display_heading_path">Based on pre-set paths in the facility</item>
+    </string-array>
+
+    <string name="settings_route">Route options</string>
+    <string name="settings_route_avoid_stairs">Avoid stairs</string>
+    <string name="settings_route_avoid_escalators">Avoid escalators</string>
+    <string name="settings_route_avoid_elevators">Avoid elevators</string>
+    <string name="settings_route_avoid_revolving_doors">Avoid revolving doors</string>
+    <string name="settings_route_avoid_narrow">Use accessible routes</string>
+    <string name="settings_route_units">Measure distance in</string>
+    <string-array name="settings_route_units_names">
+        <item>Meters</item>
+        <item>Steps</item>
+    </string-array>
+
+    <string name="settings_voice_guidance">Voice guidance</string>
+    <string name="settings_voice_guidance_enabled">Voice guidance</string>
+    <string name="settings_voice_guidance_modify">Modify voice guidance</string>
+    <string name="settings_voice_guidance_heading_correction">Confirm direction of travel</string>
+    <string name="settings_voice_guidance_decision">Tell me about decision points</string>
+    <string name="settings_voice_guidance_hazard">Tell me some hazards</string>
+    <string name="settings_voice_guidance_landmark">Tell me about some landmarks</string>
+    <string name="settings_voice_guidance_segment">Tell me about some areas</string>
+    <string name="settings_voice_guidance_reassurance">Confirm route</string>
+    <string name="settings_voice_guidance_reassurance_distance">Confirm route every</string>
+    <string-array name="settings_voice_guidance_reassurance_distance_names">
+        <item>10 meters</item>
+        <item>15 meters</item>
+        <item>20 meters</item>
+        <item>25 meters</item>
+    </string-array>
+    <string name="settings_voice_guidance_calls">Play voice during calls</string>
+
+    <string name="settings_accessibility">Accessibility settings</string>
+    <string name="settings_accessibility_haptic">Vibration</string>
+    <string name="settings_accessibility_zoom">Zoom in / zoom out button on map</string>
+    <string name="settings_accessibility_hand_mode">Hand mode</string>
+    <string-array name="settings_accessibility_hand_mode_names">
+        <item>Left hand mode</item>
+        <item>Right hand mode</item>
+    </string-array>
+    <string name="settings_accessibility_help_button">Call for help button</string>
+    <string name="settings_accessibility_guidance_metadata">Guidance based on disability</string>
+    <string-array name="settings_accessibility_guidance_metadata_names">
+        <item>Vision impairment</item>
+        <item>Hearing impairment</item>
+        <item>Neurodiverse</item>
+        <item>Ambulant disabled</item>
+        <item>Wheelchair users</item>
+        <item>None</item>
+    </string-array>
+
+    <string name="settings_help">Help</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_terms">Terms of Service</string>
+
+    <string name="settings_about">About</string>
+    <string name="settings_about_app_version_prefix">Ver</string>
+    <string name="settings_about_last_update">Last Updated</string>
+
+    <string name="settings_dev">Development settings</string>
+    <string name="settings_dev_simulate_route">Simulate route</string>
+
+    <!-- Navigation -->
+    <string name="navigation_label_then">%s, then</string>
+    <string name="hazard_warning">Warning - %s</string>
+    <string name="navigation_segment">Currently in %s</string>
+    <string name="pdr_unsupported">PDR is unsupported on this device. Localization quality will be lower.</string>
+    <string name="tts_start_error">TextToSpeech did not initialize properly.</string>
+    <string name="tts_start_success">TextToSpeech initialized successfully.</string>
+    <string name="tts_start_unknown">TextToSpeech initialization failed with unknown status.</string>
+    <string name="tts_not_available">TTS is NOT available at this time.</string>
+    <string name="tts_available">TTS is available.</string>
+
+    <string name="cardinal_point_head">Head %s</string>
+    <string name="cardinal_point_n">North</string>
+    <string name="cardinal_point_ne">North-East</string>
+    <string name="cardinal_point_e">East</string>
+    <string name="cardinal_point_se">South-East</string>
+    <string name="cardinal_point_nw">North-West</string>
+    <string name="cardinal_point_w">West</string>
+    <string name="cardinal_point_sw">South-West</string>
+    <string name="cardinal_point_s">South</string>
+
+    <!-- Explore nearby -->
+    <string name="explorenearby">Explore Nearby</string>
+    <string name="explorenearby_service_counter">Service Counter</string>
+    <string name="explorenearby_cafeteria">Cafeteria</string>
+    <string name="explorenearby_lift">Lift</string>
+    <string name="explorenearby_area">Waiting Area</string>
+    <string name="explorenearby_washrooms">Washrooms</string>
+    <string name="explorenearby_more">More</string>
+    <string name="explorenearby_parking">Parking</string>
+    <string name="explorenearby_reception">Reception</string>
+    <string name="explorenearby_offices">Offices</string>
+    <string name="explorenearby_meeting_room">Meeting room</string>
+    <string name="explorenearby_entrance">Entrance</string>
+    <string name="explorenearby_exit">Exit</string>
+    <string name="explorenearby_less">Less</string>
+
+    <!-- Notification -->
+    <string name="notification_title">Proximi.io demo app</string>
+    <string name="notification_text">This notification ensures localization is running properly.</string>
+    <string name="notification_navigation_title">Navigation</string>
+    <string name="notification_navigation_channel_name">Navigation channel</string>
+    <string name="notification_navigation_channel_description">Channel for navigation updates.</string>
+    <string name="notification_action_turn_off">Stop location service</string>
+
+    <!-- Search hint -->
+    <string name="search_hint">Where do you want to go?</string>
+    <string name="search_end">End of results</string>
+    <string name="search_item_count_zero">No results!</string>
+    <plurals name="search_item_count">
+        <item quantity="one">Total %d result</item>
+        <item quantity="other">Total %d results</item>
+    </plurals>
+
+    <!-- Search item detail -->
+    <string name="search_item_detail_about_button">About</string>
+    <string name="search_item_detail_directions_button">Show me directions</string>
+    <string name="search_item_detail_faster_route">Faster route</string>
+    <string name="search_item_detail_my_trip">Start My Trip</string>
+    <string name="search_item_detail_trip">Trip</string>
+    <string name="search_item_detail_location_description">Location description</string>
+    <string name="search_item_detail_calculating_steps">calculating steps…</string>
+    <string name="search_item_detail_calculating_steps_error">unable to estimate route</string>
+    <plurals name="search_item_detail_calculating_steps_result"><!-- add other quantities if required -->
+        <item quantity="one">%d Step</item>
+        <item quantity="other">%d Steps</item>
+    </plurals>
+    <string name="search_item_detail_description_missing">[No description available]</string>
+    <string name="search_item_detail_open_hours_missing">[No opening hours are available]</string>
+    <string name="search_item_detail_no_images">No images available</string>
+
+    <!-- Route preview fragment -->
+    <string name="route_preview_from">From</string>
+    <string name="route_preview_to">To</string>
+    <string name="route_preview_start">Start Navigation</string>
+    <string name="route_preview_cancel">Cancel route</string>
+    <string name="route_preview_steps_more">Show trip</string>
+    <string name="route_preview_steps_less">Hide trip</string>
+    <string name="route_preview_current_location">My location</string>
+    <string name="route_preview_destination_unknown">[Unknown]</string>
+    <string name="route_preview_detailed_directions">Detailed trip directions</string>
+    <string name="route_preview_calculating">calculating…</string>
+    <string name="route_preview_turn_left_hard">Turn hard left</string>
+    <string name="route_preview_turn_left">Turn left</string>
+    <string name="route_preview_turn_left_slight">Turn slight left</string>
+    <string name="route_preview_turn_straight">Continue straight</string>
+    <string name="route_preview_turn_right_slight">Turn slight right</string>
+    <string name="route_preview_turn_right">Turn right</string>
+    <string name="route_preview_turn_right_hard">Turn right</string>
+    <string name="route_preview_turn_around">Turn around</string>
+    <string name="route_preview_up_elevator">Use the elevator up</string>
+    <string name="route_preview_up_escalator">Use the escalator up</string>
+    <string name="route_preview_up_stairs">Use the stairs up</string>
+    <string name="route_preview_down_elevator">Use the elevator down</string>
+    <string name="route_preview_down_escalator">Use the escalator down</string>
+    <string name="route_preview_down_stairs">Use the stairs down</string>
+    <string name="route_preview_finish">Arrive at destination</string>
+
+    <!-- Location titles -->
+    <string name="main_title_default">@string/app_name</string>
+
+    <!-- Accessibility descriptions -->
+    <string name="accessibility_button_help">Call help</string>
+    <string name="accessibility_button_zoom_in">Zoom in map</string>
+    <string name="accessibility_button_zoom_out">Zoom out map</string>
+    <string name="accessibility_button_compass_mode_toggle">Toggle heading on map</string>
+    <string name="accessibility_button_my_location">Show my location on map</string>
+    <string name="accessibility_button_floor_dropdown">Displayed floor level</string>
+    <string name="accessibility_button_search_speechtotext">Enter search query with speech to text</string>
+    <string name="accessibility_button_settings">Open settings</string>
+    <string name="accessibility_button_stop_navigation">Stop navigation</string>
+
+</resources>

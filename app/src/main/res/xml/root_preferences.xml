@@ -1,0 +1,122 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:allowDividerBelow="true">
+
+    <PreferenceCategory app:title="@string/settings_app">
+
+    <io.proximi.navigationdemo.utils.preference.ExitAppPreference
+            app:title="@string/settings_app_exit"
+            app:key="app_exit"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/settings_display">
+
+        <SwitchPreference
+            app:title="@string/settings_display_large_mode"
+            app:key="display_large_mode"
+            app:defaultValue="false" />
+        <SwitchPreference
+            app:title="@string/settings_display_high_contract_mode"
+            app:key="display_high_contract_mode"
+            app:defaultValue="false" />
+
+        <DropDownPreference
+                app:title="@string/settings_display_heading"
+                app:key="display_heading"
+                app:entries="@array/settings_display_heading_names"
+                app:entryValues="@array/settings_display_heading_values"
+                app:summary="%s"
+                app:defaultValue="path" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/settings_route">
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="route_avoid_stairs"
+                app:title="@string/settings_route_avoid_stairs" />
+<!--        <SwitchPreference-->
+<!--                app:defaultValue="false"-->
+<!--                app:key="route_avoid_escalators"-->
+<!--                app:title="@string/settings_route_avoid_escalators" />-->
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="route_avoid_elevators"
+                app:title="@string/settings_route_avoid_elevators" />
+        <SwitchPreference
+                app:defaultValue="false"
+                app:key="route_avoid_revolving_doors"
+                app:title="@string/settings_route_avoid_revolving_doors" />
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="route_avoid_narrow"
+            app:title="@string/settings_route_avoid_narrow" />
+        <DropDownPreference
+                app:defaultValue="steps"
+                app:entries="@array/settings_route_units_names"
+                app:entryValues="@array/settings_route_units_values"
+                app:key="route_units"
+                app:summary="%s"
+                app:title="@string/settings_route_units" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/settings_voice_guidance">
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="tts_enabled"
+                app:title="@string/settings_voice_guidance" />
+        <Preference
+                app:title="@string/settings_voice_guidance_modify"
+                app:key="voice_guidance_modify"
+                app:dependency="tts_enabled"
+                app:fragment="io.proximi.navigationdemo.ui.SettingsActivity$VoiceGuidanceFragment"/>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/settings_accessibility">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="accessibility_haptic"
+            app:title="@string/settings_accessibility_haptic" />
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="accessibility_zoom"
+            app:title="@string/settings_accessibility_zoom" />
+        <DropDownPreference
+                app:defaultValue="right"
+                app:entries="@array/settings_accessibility_hand_mode_names"
+                app:entryValues="@array/settings_accessibility_hand_mode_values"
+                app:key="accessibility_hand_mode"
+                app:summary="%s"
+                app:title="@string/settings_accessibility_hand_mode"
+                />
+        <SwitchPreference
+                app:defaultValue="true"
+                app:key="accessibility_help_button"
+                app:title="@string/settings_accessibility_help_button" />
+        <DropDownPreference
+                app:defaultValue="6"
+                app:dependency="tts_enabled"
+                app:entries="@array/settings_accessibility_guidance_metadata_names"
+                app:entryValues="@array/voice_guidance_metadata_values"
+                app:key="accessibility_tts_disability"
+                app:summary="%s"
+                app:title="@string/settings_accessibility_guidance_metadata" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/settings_dev"
+            app:isPreferenceVisible="true">
+        <SwitchPreference
+                app:title="@string/settings_dev_simulate_route"
+                app:key="simulate_route"
+                app:defaultValue="false" />
+        <SeekBarPreference
+                app:title="Trilateration device threshold"
+                app:key="dev_lateration_threshold"
+                app:min="3"
+                android:max="80"
+                app:showSeekBarValue="true"
+                app:seekBarIncrement="1"
+                app:defaultValue="20" />
+        <io.proximi.navigationdemo.utils.preference.BuildVersionPreference
+                app:title="Build Version" />
+    </PreferenceCategory>
+</PreferenceScreen>

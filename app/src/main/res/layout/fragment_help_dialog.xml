@@ -1,0 +1,93 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="24dp"
+            android:background="@drawable/dialog_background"
+            android:maxWidth="460dp"
+            tools:context="io.proximi.navigationdemo.ui.main.dialogs.DialogFragmentFactory">
+
+        <TextView
+                android:id="@+id/titleView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/help_background"
+                android:gravity="center"
+                android:padding="6dp"
+                android:text="@string/dialog_help_title"
+                android:textAllCaps="true"
+                android:textColor="?attr/sosButtonTextColor"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/dialog_help_description"
+                android:textAlignment="center"
+                android:textColor="?attr/defaultTextColor"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleView" />
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/declineButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/button_rounded"
+                android:buttonCornerRadius="25dp"
+                android:text="@string/dialog_decline"
+                android:textColor="?attr/buttonTextColor"
+                app:backgroundTint="?attr/buttonBackgroundNegative"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/acceptButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="@+id/descriptionTextView"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/acceptButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/button_rounded"
+                android:text="@string/dialog_accept"
+                android:textColor="?attr/buttonTextColor"
+                app:backgroundTint="?attr/buttonBackgroundPositive"
+                app:layout_constraintEnd_toEndOf="@+id/descriptionTextView"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@+id/declineButton"
+                app:layout_constraintTop_toTopOf="@+id/declineButton" />
+
+        <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

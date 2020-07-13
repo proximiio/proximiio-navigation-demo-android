@@ -1,0 +1,130 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="appbarTextColor">@color/white</item>
+
+        <item name="buttonBackgroundNegative">@color/red</item>
+        <item name="buttonBackgroundPositive">@color/proximiBlue</item>
+        <item name="buttonBackgroundNeutral">@color/proximiGray</item>
+        <item name="buttonHighlight">@color/whiteHighlight</item>
+        <item name="buttonTextColor">@color/white</item>
+
+        <item name="colorPrimary">@color/proximiBlue</item>
+        <item name="colorPrimaryDark">@color/proximiBlueDark</item>
+        <item name="colorAccent">@color/proximiBlue</item>
+        <item name="colorFloorSpinner">@color/proximiBlueDark</item>
+        <item name="colorFloorSpinnerItemSelected">@color/white</item>
+
+        <item name="dialogBackgroundColor">@color/white</item>
+        <item name="defaultTextColor">@color/grayDark</item>
+
+        <item name="fabBackgroundColor">@color/white</item>
+        <item name="fabBackgroundDisabledColor">@color/gray</item>
+        <item name="fabForegroundColor">@color/proximiBlue</item>
+
+        <item name="iconAccessibilityColor">@color/proximiBlue</item>
+        <item name="iconAccessibilityFillColor">@color/white</item>
+        <item name="iconBluetoothColor">@color/proximiBlue</item>
+        <item name="iconBluetoothFillColor">@color/white</item>
+        <item name="iconForegroundColor">@color/white</item>
+        <item name="iconLimitedFunctionalityColor">@color/red</item>
+        <item name="iconLimitedFunctionalityFillColor">@color/white</item>
+
+        <item name="loadingOverlayBackground">@color/whiteTranslucent</item>
+        <item name="locationDescriptionBackgroundColor">@color/red</item>
+        <item name="locationPinBackgroundColor">@color/proximiBlue</item>
+
+        <item name="exploreNearbyForegroundColor">@color/white</item>
+        <item name="exploreNearbyDefaultColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceCounterColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceCafeteriaColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceLiftColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceWaitingAreaColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceWashroomsColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceParkingColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceReceptionColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceOfficesColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceMeetingRoomColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceEntranceColor">@color/proximiBlue</item>
+        <item name="exploreNearbyServiceExitColor">@color/proximiBlue</item>
+        <item name="exploreNearbyTextColor">@color/grayDark</item>
+        <item name="exploreNearbyTitleColor">@color/black</item>
+
+        <item name="navigationGuidanceBackgroundColor">@color/proximiBlue</item>
+        <item name="navigationGuidanceTextColor">@color/white</item>
+        <item name="navigationGuidanceIconColor">@color/black</item>
+        <item name="navigationHazardBackgroundColor">@color/red</item>
+        <item name="navigationHazardTextColor">@color/white</item>
+        <item name="navigationHeadingBackgroundColor">@color/proximiBlueDark</item>
+        <item name="navigationHeadingTextColor">@color/white</item>
+        <item name="navigationSegmentBackgroundColor">@color/proximiGray</item>
+        <item name="navigationSegmentTextColor">@color/white</item>
+
+        <item name="preferenceDropdownMultilineDividerColor">@color/grayLight</item>
+
+        <item name="routePreviewBackgroundColor">@color/white</item>
+        <item name="routePreviewBorderColor">@color/proximiBlue</item>
+        <item name="routePreviewButtonTextColor">@color/white</item>
+        <item name="routePreviewCancelColor">?attr/buttonBackgroundNegative</item>
+        <item name="routePreviewChipBackgroundColor">@color/chipBackground</item>
+        <item name="routePreviewChipTextColor">@color/black</item>
+        <item name="routePreviewCurrentPositionMarker">@drawable/ic_current_position</item>
+        <item name="routePreviewDestinationColor">@color/red</item>
+        <item name="routePreviewDestinationHoleColor">@color/white</item>
+        <item name="routePreviewStartColor">?attr/buttonBackgroundPositive</item>
+        <item name="routePreviewStepColor">@color/black</item>
+        <item name="routePreviewTripColor">?attr/buttonBackgroundNeutral</item>
+        <item name="routePreviewTitleTextColor">@color/black</item>
+
+        <item name="searchItemNavigationButtonColor">@color/proximiBlueDark</item>
+        <item name="searchItemNavigationButtonTextTint">@color/white</item>
+        <item name="searchItemDescriptionBackgroundColor">@color/white</item>
+        <item name="searchItemDescriptionTextColor">@color/grayDark</item>
+        <item name="searchItemDetailTextColor">@color/grayDark</item>
+        <item name="searchItemDetailTitleColor">@color/black</item>
+        <item name="searchExpandIconColor">@color/proximiBlue</item>
+        <item name="searchResultEndIconColor">@color/red</item>
+        <item name="stepsBackgroundColor">@color/proximiBlue</item>
+        <item name="searchItemTitleColor">@color/white</item>
+        <item name="searchItemTextColor">@color/black</item>
+        <item name="searchItemBackgroundColor">@color/white</item>
+        <item name="searchBarBackgroundColor">@color/white</item>
+        <item name="searchBarTextColor">@color/black</item>
+        <item name="searchBarHintColor">@color/grayDark</item>
+        <item name="searchBarChipBackgroundColor">@color/chipBackground</item>
+        <item name="searchBarChipTextColor">@color/black</item>
+        <item name="searchBarChipButtonColor">@color/chipButton</item>
+        <item name="searchBackgroundColor">@color/offWhite</item>
+
+        <item name="sosButtonBackgroundColor">@color/red</item>
+        <item name="sosButtonTextColor">@color/white</item>
+
+        <item name="timeBackgroundColor">@color/proximiBlue</item>
+        <item name="tripBackgroundColor">@color/proximiBlue</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.Settings" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/proximiBlue</item>
+        <item name="colorPrimaryDark">@color/proximiBlueDark</item>
+        <item name="colorAccent">@color/blueLight</item>
+    </style>
+
+    <style name="CustomPreferenceCategory" parent="@style/Preference.Category.Material">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="CustomPreferenceCategoryText" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">56dp</item>
+    </style>
+
+</resources>

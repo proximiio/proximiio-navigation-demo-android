@@ -1,0 +1,149 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="io.proximi.navigationdemo.ui.main.fragments.search.SearchFragment">
+
+    <LinearLayout
+            android:id="@+id/bottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/searchBackgroundColor"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            app:behavior_hideable="false"
+            app:layout_behavior="io.proximi.navigationdemo.utils.TwoStageBottomSheetBehavior">
+
+
+        <FrameLayout
+                android:id="@+id/searchCardViewWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/searchCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/fragment_search_input_margin"
+                    android:layout_marginLeft="@dimen/fragment_search_input_margin"
+                    android:layout_marginTop="@dimen/fragment_search_input_margin"
+                    android:layout_marginEnd="@dimen/fragment_search_input_margin"
+                    android:layout_marginRight="@dimen/fragment_search_input_margin"
+                    android:layout_marginBottom="@dimen/freagment_search_input_margin_bottom"
+                    android:fitsSystemWindows="true"
+                    app:cardBackgroundColor="?attr/searchBarBackgroundColor"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    app:cardMaxElevation="1dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:layoutDirection="ltr"
+                        android:orientation="horizontal"
+                        android:paddingTop="2dp"
+                        android:paddingBottom="2dp">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/voiceInputButtonLeft"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/accessibility_button_search_speechtotext"
+                            android:drawableStart="@drawable/ic_mic"
+                            android:minWidth="0dp" />
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layoutDirection="locale"
+                            android:orientation="horizontal"
+                            android:paddingStart="4dp"
+                            android:paddingEnd="4dp">
+
+                        <com.google.android.material.chip.Chip
+                                android:id="@+id/nearbyItemFilterChipView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/searchBarChipTextColor"
+                                android:theme="@style/Theme.MaterialComponents.Light"
+                                android:visibility="gone"
+                                app:chipBackgroundColor="?attr/searchBarChipBackgroundColor"
+                                app:closeIconTint="?attr/searchBarChipButtonColor"
+                                app:closeIconVisible="true"
+                                tools:text="@string/explorenearby_area"
+                                tools:visibility="visible" />
+
+                        <EditText
+                                android:id="@+id/searchEditText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@android:color/transparent"
+                                android:clickable="true"
+                                android:ellipsize="end"
+                                android:focusable="true"
+                                android:hint="@string/search_hint"
+                                android:padding="8dp"
+                                android:singleLine="true"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="?attr/searchBarTextColor"
+                                android:textColorHint="?attr/searchBarHintColor"
+                                android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/voiceInputButtonRight"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/accessibility_button_search_speechtotext"
+                            android:drawableStart="@drawable/ic_mic"
+                            android:minWidth="0dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </FrameLayout>
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/nearby_background_opened">
+
+            <LinearLayout
+                    android:id="@+id/searchBackgroundLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/nearby_background"
+                    android:orientation="vertical">
+
+                <ImageView
+                        android:id="@+id/expandMoreImageView"
+                        android:layout_width="36dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:padding="2dp"
+                        android:scaleType="fitXY"
+                        android:tint="?attr/searchExpandIconColor"
+                        app:srcCompat="@drawable/ic_expand" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/searchRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="true"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        app:spanCount="2"
+                        tools:listitem="search" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

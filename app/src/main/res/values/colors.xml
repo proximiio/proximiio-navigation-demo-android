@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="proximiBlue">#08aee6</color>
+    <color name="proximiBlueDark">#0783AC</color>
+    <color name="proximiGray">#969696</color>
+
+    <color name="black">#ff000000</color>
+    <color name="white">#ffffff</color>
+    <color name="offWhite">#f6f6f6</color>
+    <color name="grayDark">#666666</color>
+    <color name="whiteHighlight">#44ffffff</color>
+    <color name="blackHighlight">#44000000</color>
+    <color name="whiteTranslucent">#bbffffff</color>
+    <color name="green">#0bb14e</color>
+    <color name="blueLight">#21b4fa</color>
+    <color name="blueLightTransparent">#0021b4fa</color>
+    <color name="red">#ed174b</color>
+    <color name="gray">#999999</color>
+    <color name="grayLight">#cccccc</color>
+    <color name="yellowHighContrast">#ffff00</color>
+    <color name="yellowHighContrastTransparent">#00ffff00</color>
+    <color name="chipBackground">#e5e5e5</color>
+    <color name="chipButton">#696969</color>
+    <color name="colorRoutePreviewSeparator">#cccccc</color>
+    <color name="ic_launcher_proximiio_background">@color/white</color>
+    <color name="colorNotification">@color/green</color>
+
+
+</resources>

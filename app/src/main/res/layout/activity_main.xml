@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+        <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+<!--            <androidx.appcompat.widget.Toolbar-->
+<!--                    android:id="@+id/toolbar"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="?attr/colorPrimary"-->
+<!--                    android:layoutDirection="ltr"-->
+<!--                    android:minHeight="?attr/actionBarSize"-->
+<!--                    android:theme="?attr/actionBarTheme" />-->
+
+            <include layout="@layout/activity_main_appbar" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="true">
+
+                <include
+                        layout="@layout/activity_main_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                <LinearLayout
+                        android:id="@+id/fabsWrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:clipChildren="false"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/helpButton"
+                            android:layout_width="72dp"
+                            android:layout_height="72dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="6dp"
+                            android:background="@drawable/help_background"
+                            android:padding="4dp"
+                            android:text="@string/button_help"
+                            android:textColor="?attr/sosButtonTextColor"
+                            android:textSize="16sp"
+                            app:autoSizeMaxTextSize="16sp"
+                            app:autoSizeMinTextSize="12sp"
+                            app:autoSizeTextType="uniform" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/zoomInFab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="6dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/accessibility_button_zoom_in"
+                            android:focusable="true"
+                            android:tint="?attr/fabForegroundColor"
+                            app:backgroundTint="?attr/fabBackgroundColor"
+                            app:fabSize="auto"
+                            app:srcCompat="@drawable/ic_zoom_in" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/zoomOutFab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="6dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/accessibility_button_zoom_out"
+                            android:focusable="true"
+                            android:tint="?attr/fabForegroundColor"
+                            app:backgroundTint="?attr/fabBackgroundColor"
+                            app:srcCompat="@drawable/ic_zoom_out" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/toggleModeFab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="6dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/accessibility_button_compass_mode_toggle"
+                            android:focusable="true"
+                            android:tint="?attr/fabForegroundColor"
+                            app:backgroundTint="?attr/fabBackgroundColor"
+                            app:srcCompat="@drawable/ic_compass_disabled" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/myLocationFab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="12dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/accessibility_button_my_location"
+                            android:focusable="true"
+                            android:tint="?attr/fabForegroundColor"
+                            app:backgroundTint="?attr/fabBackgroundColor"
+                            app:srcCompat="@drawable/ic_my_location" />
+
+                </LinearLayout>
+
+                <FrameLayout
+                        android:id="@+id/fragmentNavigationHostFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/accessibility_button_help" />
+
+                <LinearLayout
+                        android:id="@+id/loadingOverlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?attr/loadingOverlayBackground"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="visible"
+                        tools:visibility="gone">
+
+                    <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp" />
+
+                    <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/loading_overlay"
+                            android:textColor="?attr/defaultTextColor"
+                            android:textAlignment="center"
+                            android:textSize="16sp" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!--        <include layout="@layout/activity_main_content_bottomsheet" />-->
+
+        </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
