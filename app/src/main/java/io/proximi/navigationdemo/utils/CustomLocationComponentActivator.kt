@@ -23,6 +23,7 @@ class CustomLocationComponentActivator(
             .bearingDrawable(R.drawable.location_marker_bearing)
             .foregroundStaleTintColor(Color.GRAY)
             .gpsDrawable(R.drawable.navigation_marker)
+            .trackingGesturesManagement(true)
             .staleStateTimeout(20000)
             .accuracyAlpha(0f)
             .elevation(0.0001f)

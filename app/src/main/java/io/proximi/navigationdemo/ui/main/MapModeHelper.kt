@@ -90,8 +90,8 @@ class MapModeHelper(
     fun onNavigationEnd() {
         if (isNavigating) {
             isNavigating = false
-            applyRenderMode()
             currentState = States.TRACKING_BEARING
+            applyState()
         }
     }
 
