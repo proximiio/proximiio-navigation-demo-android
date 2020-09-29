@@ -437,7 +437,6 @@ class NavigationService: LifecycleService() {
             pdrCorrectionThreshold(4.0)
             snapToRouteEnabled(true)
             snapToRouteThreshold(20.0)
-            setLaterationDeviceThreshold(1000.0)
         }
     }
 
