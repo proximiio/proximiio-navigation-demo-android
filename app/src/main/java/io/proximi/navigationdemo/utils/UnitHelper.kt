@@ -3,6 +3,7 @@ package io.proximi.navigationdemo.utils
 import android.content.Context
 import android.content.res.Resources
 import androidx.preference.PreferenceManager
+import io.proximi.mapbox.library.UnitConversion
 import io.proximi.navigationdemo.R
 import io.proximi.navigationdemo.ui.SettingsActivity
 import kotlin.math.roundToInt
@@ -34,13 +35,19 @@ object UnitHelper {
      */
     fun getDistanceInPreferenceUnit(distanceInMeters: Double, context: Context): String {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        return if (preferences.getString(SettingsActivity.ROUTE_UNITS, "step")!! == "step") {
-            val steps = convertMetersToStep(distanceInMeters)
-            context.resources.getQuantityString(R.plurals.step_count, steps, steps)
+        val converter = if (preferences.getString(SettingsActivity.ROUTE_UNITS, SettingsActivity.ROUTE_UNITS_STEP)!! == SettingsActivity.ROUTE_UNITS_STEP) {
+            STEPS
         } else {
-            val metersRounded = distanceInMeters.roundToInt()
-            context.resources.getQuantityString(R.plurals.navigation_meters, metersRounded, metersRounded)
+            METERS
         }
+        val convertedDistance = converter.convert(distanceInMeters)
+        val plural = when (convertedDistance.unitName) {
+            "steps" -> R.plurals.navigation_steps
+            "meters" -> R.plurals.navigation_meters
+            "kilometers" -> R.plurals.navigation_kilometers
+            else -> error("Unsupported unit!")
+        }
+        return context.resources.getQuantityString(plural, convertedDistance.value.roundToInt(), convertedDistance.valueString)
     }
 
     /**
@@ -48,13 +55,19 @@ object UnitHelper {
      */
     fun getDistanceLeftInPreferenceUnit(distanceInMeters: Double, context: Context): String {
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        return if (preferences.getString(SettingsActivity.ROUTE_UNITS, "step")!! == "step") {
-            val steps = convertMetersToStep(distanceInMeters)
-            context.resources.getQuantityString(R.plurals.steps_left, steps, steps)
+        val converter = if (preferences.getString(SettingsActivity.ROUTE_UNITS, SettingsActivity.ROUTE_UNITS_STEP)!! == SettingsActivity.ROUTE_UNITS_STEP) {
+            STEPS
         } else {
-            val metersRoundend = distanceInMeters.roundToInt()
-            context.resources.getQuantityString(R.plurals.meters_left, metersRoundend, metersRoundend)
+            METERS
         }
+        val convertedDistance = converter.convert(distanceInMeters)
+        val plural = when (convertedDistance.unitName) {
+            "steps" -> R.plurals.steps_left
+            "meters" -> R.plurals.meters_left
+            "kilometers" -> R.plurals.kilometers_left
+            else -> error("Unsupported unit!")
+        }
+        return context.resources.getQuantityString(plural, convertedDistance.value.roundToInt(), convertedDistance.valueString)
     }
 
     /**
@@ -79,4 +92,22 @@ object UnitHelper {
     private fun distanceToSeconds(distance: Double): Int {
         return (distance / WALKING_SPEED).roundToInt()
     }
+
+    /**
+     * UnitConversion for meters. Passed to ProximiioMapbox to ensure navigation contains required units.
+     */
+    val METERS = UnitConversion.Builder()
+        .addStage("meters", 1.0)
+        .addStage("kilometers", 0.001   , 1000.0, 1)
+        .addStage("kilometers", 0.001   , 2000.0, 0)
+        .build()
+
+    /**
+     * UnitConversion for Steps. Passed to ProximiioMapbox to ensure navigation contains required units.
+     */
+    val STEPS = UnitConversion.Builder()
+        .addStage(SettingsActivity.ROUTE_UNITS_STEP, METER_TO_STEP_COEFFICIENT)
+        .addStage("kilometers", 0.001   , 1000.0, 1)
+        .addStage("kilometers", 0.001   , 2000.0, 0)
+        .build()
 }

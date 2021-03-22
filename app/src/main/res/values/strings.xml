@@ -12,26 +12,32 @@
 
     <!-- Common  -->
     <string name="loading_overlay">Loading…</string>
-    <plurals name="step_count"><!-- add other quantities if required -->
-        <item quantity="one">%d step</item>
-        <item quantity="other">%d steps</item>
+    <plurals name="navigation_steps"><!-- add other quantities if required -->
+        <item quantity="one">%s step</item>
+        <item quantity="other">%s steps</item>
     </plurals>
 
     <plurals name="navigation_meters">
-        <item quantity="one">%d meter</item>
-        <item quantity="other">%d meters</item>
+        <item quantity="one">%s meter</item>
+        <item quantity="other">%s meters</item>
+    </plurals>
+
+    <plurals name="navigation_kilometers">
+        <item quantity="one">%s kilometer</item>
+        <item quantity="other">%s kilometers</item>
     </plurals>
 
     <plurals name="steps_left">
-        <item quantity="zero">%d steps left</item>
-        <item quantity="one">%d step left</item>
-        <item quantity="two">%d steps left</item>
-        <item quantity="few">%d steps left</item>
-        <item quantity="many">%d steps left</item>
-        <item quantity="other">%d steps left</item>
+        <item quantity="one">%s step left</item>
+        <item quantity="other">%s steps left</item>
     </plurals>
 
     <plurals name="meters_left"><!-- add other quantities if required -->
+        <item quantity="one">%s meter left</item>
+        <item quantity="other">%s meters left</item>
+    </plurals>
+
+    <plurals name="kilometers_left"><!-- add other quantities if required -->
         <item quantity="one">%d meter left</item>
         <item quantity="other">%d meters left</item>
     </plurals>
@@ -59,12 +65,14 @@
     <string name="dialog_limited_functionality_bluetooth_description">Without Bluetooth, we can’t show you where to go.\n\nTurn Bluetooth on?</string>
     <string name="dialog_accessibility_description">This service is accessible to people with disabilities.\n\nGo to settings?</string>
     <string name="dialog_not_covered">The place you\'re in isn\'t covered. Talk to someone in charge and recommend us.</string>
+    <string name="dialog_waypoint_selection">Select one or more waypoints</string>
 
     <!-- Limited functionality Fragment -->
     <string name="dialog_help_title">Help</string>
     <string name="dialog_help_description">Call location support staff?</string>
     <string name="dialog_accept">Yes</string>
     <string name="dialog_decline">No</string>
+    <string name="dialog_cancel">Cancel</string>
     <string name="dialog_ok">OK</string>
 
     <!-- Search floor names -->
@@ -226,6 +234,7 @@
 
     <!-- Route preview fragment -->
     <string name="route_preview_from">From</string>
+    <string name="route_preview_through">Through</string>
     <string name="route_preview_to">To</string>
     <string name="route_preview_start">Start Navigation</string>
     <string name="route_preview_cancel">Cancel route</string>
@@ -264,5 +273,10 @@
     <string name="accessibility_button_search_speechtotext">Enter search query with speech to text</string>
     <string name="accessibility_button_settings">Open settings</string>
     <string name="accessibility_button_stop_navigation">Stop navigation</string>
+
+    <string name="mapDemoSearchHint">Search for waypoints</string>
+    <string name="no_items_matching">Search for waypoints</string>
+    <string name="featureBackupDescription">Level: %d - Distance: %d m</string>
+    <string name="waypoint">Waypoint</string>
 
 </resources>

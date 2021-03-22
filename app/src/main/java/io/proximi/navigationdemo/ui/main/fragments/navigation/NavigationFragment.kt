@@ -207,7 +207,7 @@ class NavigationFragment : Fragment() {
      */
     private fun updateActivityBottomOffset() {
         if (activity != null && view != null) {
-            activity!!.setBottomOffset(view!!.height - navigationTopView.top, true)
+            activity!!.setBottomOffset(this, view!!.height - navigationTopView.top, true)
         }
     }
 }

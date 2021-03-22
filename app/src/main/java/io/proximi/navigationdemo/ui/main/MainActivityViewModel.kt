@@ -13,12 +13,9 @@ import androidx.lifecycle.*
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import io.proximi.navigationdemo.utils.CustomLocationComponentActivator
 import io.proximi.navigationdemo.navigationservice.NavigationService
-import io.proximi.mapbox.library.ProximiioSearchFilter
-import io.proximi.mapbox.library.Route
-import io.proximi.mapbox.library.RouteCallback
-import io.proximi.mapbox.library.RouteOptions
 import io.proximi.mapbox.data.model.Amenity
 import io.proximi.mapbox.data.model.Feature
+import io.proximi.mapbox.library.*
 import io.proximi.proximiiolibrary.ProximiioGeofence
 import io.proximi.proximiiolibrary.ProximiioPlace
 
@@ -126,18 +123,19 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
         if (navigationService != null) {
             mapInitTask!!.invoke()
+            mapInitTask = null
         }
     }
 
     /**
      * Starts navigation route.
      */
-    fun routeFind(toPoiId: String, routeOptions: RouteOptions) {
+    fun routeFind(toPoiId: String, waypointList: List<RouteConfiguration.Waypoint> = listOf()) {
         routeStart = {
             Log.d("NAVIGATION_LOOP", "ViewModel preparation (callable)")
             routeStart = null
-            navigationService?.routeCancel()
-            navigationService?.routeFind(toPoiId, routeOptions)
+//            navigationService?.routeCancel()
+            navigationService?.routeFind(toPoiId, waypointList)
         }
         navigationService?.let { routeStart?.invoke() }
     }
@@ -152,8 +150,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     /**
      * Calculate route to given location.
      */
-    fun routeCalculate(toLocation: Location, toLevel: Int, title: String, options: RouteOptions, routeCallback: RouteCallback) {
-        navigationService?.routeCalculate(toLocation, toLevel, title, options, routeCallback)
+    fun routeCalculate(toPoiId: String, routeCallback: RouteCallback) {
+        navigationService?.routeCalculate(toPoiId, routeCallback)
     }
 
     /**
@@ -184,6 +182,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             navigationService!!.onActivityStart()
             navigationService!!.loadMapSdkSettings()
             mapInitTask?.invoke()
+            mapInitTask = null
             setupObservers()
             routeStart?.invoke()
         }

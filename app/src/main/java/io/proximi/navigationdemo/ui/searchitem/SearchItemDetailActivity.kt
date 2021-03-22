@@ -110,8 +110,8 @@ class SearchItemDetailActivity : ScaledContextActivity() {
      * Estimate distance to the feature from current location and update the information in the UI.
      */
     private fun loadDistanceEstimates() {
-        val accessibleOptions = RouteOptionsHelper.create(baseContext)
-        proximiioMapbox.routeCalculate((feature.featureGeometry as Point).toLocation(), feature.getLevel() ?: 0, feature.getTitle(), accessibleOptions, FeatureDistanceCalculationCallback(routeAccessibleTextView))
+        val configuration = RouteConfigurationHelper.create(baseContext, feature, listOf())
+        proximiioMapbox.routeCalculate(configuration, FeatureDistanceCalculationCallback(routeAccessibleTextView))
     }
 
     /**

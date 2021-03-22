@@ -112,10 +112,8 @@ class NavigationService: LifecycleService() {
         updateNotification(null)
         setupWakelock()
         // Setup livedata observer to filter out POI lists from all features
-        featuresLiveData.observe(this, Observer {
-            val newPoiList = it.filter { poiListTypes.contains(it.getType())}.sortedBy { it.getTitle() }
-            poiList.postValue(newPoiList)
-        })
+        featuresLiveData.observe(this, Observer { updatePoiList(it) })
+        userPlaceLiveData.observe(this, Observer { updatePoiList(featuresLiveData.value!!) })
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -132,6 +130,14 @@ class NavigationService: LifecycleService() {
         }
         Log.d(TAG, "Service destroyed.")
         super.onDestroy()
+    }
+
+    private fun updatePoiList(featureList: List<Feature>) {
+        val newPoiList = featureList
+            .filter { poiListTypes.contains(it.getType())}
+            .filter { it.getPlaceId() == userPlaceLiveData.value?.id }
+            .sortedBy { it.getTitle() }
+        poiList.postValue(newPoiList)
     }
 
     /* ------------------------------------------------------------------------------------------ */
@@ -384,15 +390,11 @@ class NavigationService: LifecycleService() {
         }
     }
 
-    fun routeFind(toPoiId: String, routeOptions: RouteOptions) {
+    fun routeFind(toPoiId: String, waypointList: List<RouteConfiguration.Waypoint>) {
         Log.d("NAVIGATION_LOOP", "Service starting route")
-        proximiioMapbox.routeFind(
-            toPoiId,
-            routeOptions,
-            true,
-            false,
-            routeUpdateListener
-        )
+        val destination = featuresLiveData.value!!.first { it.id == toPoiId }
+        val configuration = RouteConfigurationHelper.create(baseContext, destination, waypointList)
+        proximiioMapbox.routeFindAndPreview(configuration, routeUpdateListener)
     }
 
     fun startRoute() {
@@ -407,8 +409,10 @@ class NavigationService: LifecycleService() {
         displayLevel.postValue(level)
     }
 
-    fun routeCalculate(toLocation: Location, toLevel: Int, title: String, options: RouteOptions, routeCallback: RouteCallback) {
-        return proximiioMapbox.routeCalculate(toLocation, toLevel, title, options, routeCallback)
+    fun routeCalculate(toPoiId: String, routeCallback: RouteCallback) {
+        val destination = featuresLiveData.value!!.first { it.id == toPoiId }
+        val configuration = RouteConfigurationHelper.create(baseContext, destination, listOf())
+        proximiioMapbox.routeCalculate(configuration, routeCallback)
     }
 
     fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
@@ -498,7 +502,7 @@ class NavigationService: LifecycleService() {
             setUserLocationToRouteSnappingEnabled(true)
             setUserLocationToRouteSnappingThreshold(4.0)
             setRouteFinishThreshold(2.0)
-            setStepImmediateThreshold(2.3)
+            setStepImmediateThreshold(2.5)
             setStepPreparationThreshold(5.0)
             setRoutePathFixDistance(1.0)
         }
@@ -557,9 +561,9 @@ class NavigationService: LifecycleService() {
             ttsDestinationMetadataKeys(metadataKeys)
             // Set desired units
             if (preferences.getString(SettingsActivity.ROUTE_UNITS, SettingsActivity.ROUTE_UNITS_STEP)!! == SettingsActivity.ROUTE_UNITS_STEP) {
-                setUnitConversion(SettingsActivity.ROUTE_UNITS_STEP, METER_TO_STEP_COEFFICIENT)
+                setUnitConversion(UnitHelper.STEPS)
             } else {
-                setUnitConversion(SettingsActivity.ROUTE_UNITS_METER, 1.0)
+                setUnitConversion(UnitHelper.METERS)
             }
             setRouteSimulationEnabled(sharedPreferences.getBoolean(SIMULATE_ROUTE, false)) { level, _, finished ->
                 if (this@NavigationService.displayLevel.value != level) {

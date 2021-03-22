@@ -195,7 +195,6 @@ class SearchFragment : Fragment(), CoroutineScope {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (isRemoving || isDetached) return
             if (newState == TwoStageBottomSheetBehavior.STATE_EXPANDED) {
-                // TODO
                 adapter.resetPoiDistance()
                 adapter.showPOIs = true
                 adapter.showNearby = true
@@ -282,7 +281,7 @@ class SearchFragment : Fragment(), CoroutineScope {
      */
     private fun updateActivityOffset(bottomSheet: View) {
         if (activity != null && view != null) {
-            activity!!.setBottomOffset(view!!.height - bottomSheet.top - resources.getDimension(R.dimen.fragment_search_input_margin).roundToInt())
+            activity!!.setBottomOffset(this, view!!.height - bottomSheet.top - resources.getDimension(R.dimen.fragment_search_input_margin).roundToInt())
         }
     }
 

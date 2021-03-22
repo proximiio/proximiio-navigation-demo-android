@@ -37,7 +37,7 @@ import io.proximi.navigationdemo.ui.searchitem.SearchItemDetailActivity
 import io.proximi.navigationdemo.ui.main.fragments.navigation.NavigationFragment
 import io.proximi.navigationdemo.ui.main.fragments.search.SearchFragment
 import io.proximi.navigationdemo.utils.CustomLocationComponentActivator
-import io.proximi.navigationdemo.utils.RouteOptionsHelper
+import io.proximi.navigationdemo.utils.RouteConfigurationHelper
 import io.proximi.navigationdemo.utils.ScaledContextActivity
 import io.proximi.mapbox.library.RouteUpdateType
 import kotlinx.android.synthetic.main.activity_main.*
@@ -211,20 +211,26 @@ class MainActivity : ScaledContextActivity() {
     /**
      * Set pixel offset for FABs from the bottom of the screen.
      */
-    fun setBottomOffset(px: Int, animate: Boolean = false) {
+    fun setBottomOffset(origin: Fragment, px: Int, animate: Boolean = false) {
+        if (origin != currentFragment) return
         val targetTranslation = -px.toFloat()
+        Log.d(TAG, "targetTranslation = $targetTranslation")
         bottomAnimator?.cancel()
         bottomAnimator = null
         if (animate) {
             bottomAnimator = ValueAnimator.ofFloat(fabsWrapper.translationY, targetTranslation).apply {
-                addUpdateListener {
-                    val value = it.animatedValue as Float
+                addUpdateListener { update ->
+                    val value = update.animatedValue as Float
                     fabsWrapper.translationY = value
+                    mapView.translationY = value / 2
+//                    Log.d(TAG, "animatedTranslation = $value")
                 }
+
                 start()
             }
         } else {
             fabsWrapper.translationY = targetTranslation
+            mapView.translationY = targetTranslation / 2
         }
     }
 
@@ -286,7 +292,7 @@ class MainActivity : ScaledContextActivity() {
             val poiId = data.extras!!.getString(EXTRA_POI_ID)
             if (poiId != null && poiId.isNotBlank()) {
                 Log.d("NAVIGATION_LOOP", "MainActivity starting route")
-                viewModel.routeFind(poiId, RouteOptionsHelper.create(baseContext))
+                viewModel.routeFind(poiId)
             }
         }
     }
@@ -325,7 +331,7 @@ class MainActivity : ScaledContextActivity() {
             mapboxMap.addOnMapClickListener { point ->
                 // Query features from selected layers only and use first to open detail activity
                 mapboxMap.queryRenderedFeatures(mapboxMap.projection.toScreenLocation(point), "proximiio-pois-icons", "proximiio-levelchangers")
-                    .map { poi -> viewModel.poisLiveData.value!!.firstOrNull { poi.id() == it.id } }
+                    .map { poi -> viewModel.featuresLiveData.value!!.firstOrNull { poi.id() == it.id } }
                     .firstOrNull()?.let {feature ->
                         SearchItemDetailActivity.startForResult(this, SEARCH_CODE, feature)
                 } != null

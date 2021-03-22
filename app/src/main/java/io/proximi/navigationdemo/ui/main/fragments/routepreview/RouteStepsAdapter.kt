@@ -24,11 +24,9 @@ class RouteStepsAdapter: RecyclerView.Adapter<RouteStepsAdapter.RouteStepViewHol
      * Update with route information.
      */
     fun updateRoute(route: Route?) {
-        if (route == null) {
-            nodeList = listOf()
-        } else {
-            nodeList = route.nodeList
-        }
+        // Filter out nodes (points) where patch switches to new floor
+        nodeList = route?.nodeList?.filterIndexed { _, node -> !node.direction.isLevelChangeExit() }
+                ?: listOf()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RouteStepViewHolder {
@@ -48,13 +46,11 @@ class RouteStepsAdapter: RecyclerView.Adapter<RouteStepsAdapter.RouteStepViewHol
         return if (position == 0 || position == nodeList.size - 1) return 1 else 0
     }
 
-    /**
-     * ViewHolder for individual steps of route.
-     */
     inner class RouteStepViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun load(routeNode: Route.RouteNode) {
             itemView.stepTextView.text = itemView.context.getString(routeNode.direction.getString())
             itemView.stepImageView.setImageResource(routeNode.direction.getPreviewDrawable(itemView.context))
+            itemView.stepWaypointTextView.visibility = if (routeNode.isWaypoint) View.VISIBLE else View.GONE
             if (routeNode.distanceFromLastNode != 0.0) {
                 itemView.stepCountTextView.visibility = View.VISIBLE
                 itemView.stepCountTextView.text = UnitHelper.getDistanceInPreferenceUnit(routeNode.distanceFromLastNode, itemView.context)

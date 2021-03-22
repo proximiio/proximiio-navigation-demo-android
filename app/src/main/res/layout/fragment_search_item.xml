@@ -84,7 +84,8 @@
                 android:paddingBottom="4dp"
                 android:text="20 - 50 steps"
                 android:textAlignment="center"
-                android:textColor="?attr/searchItemTextColor" />
+                android:textColor="?attr/searchItemTextColor"
+                android:visibility="gone" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

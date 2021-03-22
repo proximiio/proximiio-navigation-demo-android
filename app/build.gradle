@@ -41,27 +41,23 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation 'com.google.android.material:material:1.4.0-alpha01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation 'androidx.preference:preference:1.1.1'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
-    // Mapbox libraries
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.1'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v7:0.2.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.0.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
     // Proximi.io libraries
-    implementation 'io.proximi.proximiiolibrary:proximiiolibrary:5.0.+'
-    implementation ('io.proximi.proximiiolibrary:mapbox:5.0.+') { exclude group: 'com.eclipsesource.j2v8' }
+    implementation 'io.proximi.library:core:5.1.+'
+    implementation ('io.proximi.library:mapbox:5.1.+') { exclude group: 'com.eclipsesource.j2v8' }
     // Include JS engine manually
     implementation ('com.eclipsesource.j2v8:j2v8:6.1.0@aar')
     // Image loading library

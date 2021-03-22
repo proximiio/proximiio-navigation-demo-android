@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/searchCardView"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:animateLayoutChanges="true">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                <EditText
+                        android:id="@+id/searchEditText"
+                        app:drawableTint="@android:color/darker_gray"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:drawableStart="@drawable/ic_search"
+                        android:drawablePadding="8dp"
+                        android:ems="10"
+                        android:hint="@string/mapDemoSearchHint"
+                        android:paddingStart="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="12dp"
+                        android:singleLine="true" />
+
+                <ImageButton
+                        android:id="@+id/searchCloseButton"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        app:srcCompat="@drawable/ic_cancel"
+                        tools:visibility="visible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="48dip"
+                        android:tint="@color/gray"
+                        android:visibility="gone" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/featureRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:visibility="visible"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/fragment_map_demo_search_item"
+                    tools:visibility="visible" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <Button
+                        android:id="@+id/cancelButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_rounded"
+                        android:text="@string/dialog_cancel"
+                        android:textColor="?attr/buttonTextColor"
+                        app:backgroundTint="?attr/buttonBackgroundNegative" />
+
+                <Button
+                        android:id="@+id/acceptButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_rounded"
+                        android:text="@string/dialog_ok"
+                        android:textColor="?attr/buttonTextColor"
+                        app:backgroundTint="?attr/buttonBackgroundPositive" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

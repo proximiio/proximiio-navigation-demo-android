@@ -161,32 +161,32 @@ class SearchItemAdapter(
             itemView.itemNameTextView.setBackgroundColor(feature.titleBackgroundColor)
 
             // Distance text
-            if (distanceStringCache.containsKey(this.feature.id)) {
-                itemView.itemDistanceTextView.text = distanceStringCache[this.feature.id]
-            } else {
-                itemView.itemDistanceTextView.text = itemView.context.getString(R.string.search_item_distance_estimating)
-                try {
-                    viewModel?.routeCalculate((feature.featureGeometry as Point).toLocation(), feature.getLevel() ?: 0, feature.getTitle() ?: "",
-                        RouteOptionsHelper.create(itemView.context), object: RouteCallback {
-                        override fun routeEvent(eventType: RouteUpdateType, text: String, additionalText: String?, data: RouteUpdateData?) {}
-                        override fun onRoute(route: Route?) {
-                            val text = if (route == null) {
-                                itemView.context.getString(R.string.search_item_distance_unknown)
-                            } else {
-                                val distanceInMeters = route.nodeList.fold(0.0) { acc, node -> acc + node.distanceFromLastNode }
-                                UnitHelper.getDistanceInPreferenceUnit(distanceInMeters, itemView.context)
-                            }
-                            distanceStringCache[feature.id] = text
-                            if(this@ItemViewHolder.feature.id == feature.id) {
-                                itemView.itemDistanceTextView.text = text
-                            }
-                        }
-                    })
-                } catch (e: RuntimeException) {
-                    Log.d(SearchItemAdapter::class.java.simpleName, "unable to calculate route")
-                    itemView.itemDistanceTextView.text = itemView.context.getString(R.string.search_item_distance_unknown)
-                }
-            }
+//            if (distanceStringCache.containsKey(this.feature.id)) {
+//                itemView.itemDistanceTextView.text = distanceStringCache[this.feature.id]
+//            } else {
+//                itemView.itemDistanceTextView.text = itemView.context.getString(R.string.search_item_distance_estimating)
+//                try {
+//                    viewModel?.routeCalculate((feature.featureGeometry as Point).toLocation(), feature.getLevel() ?: 0, feature.getTitle() ?: "",
+//                        RouteOptionsHelper.create(itemView.context), object: RouteCallback {
+//                        override fun routeEvent(eventType: RouteUpdateType, text: String, additionalText: String?, data: RouteUpdateData?) {}
+//                        override fun onRoute(route: Route?) {
+//                            val text = if (route == null) {
+//                                itemView.context.getString(R.string.search_item_distance_unknown)
+//                            } else {
+//                                val distanceInMeters = route.nodeList.fold(0.0) { acc, node -> acc + node.distanceFromLastNode }
+//                                UnitHelper.getDistanceInPreferenceUnit(distanceInMeters, itemView.context)
+//                            }
+//                            distanceStringCache[feature.id] = text
+//                            if(this@ItemViewHolder.feature.id == feature.id) {
+//                                itemView.itemDistanceTextView.text = text
+//                            }
+//                        }
+//                    })
+//                } catch (e: RuntimeException) {
+//                    Log.d(SearchItemAdapter::class.java.simpleName, "unable to calculate route")
+//                    itemView.itemDistanceTextView.text = itemView.context.getString(R.string.search_item_distance_unknown)
+//                }
+//            }
             itemView.setOnClickListener { searchFragment.openDetail(feature) }
         }
         fun cleanUp() {
