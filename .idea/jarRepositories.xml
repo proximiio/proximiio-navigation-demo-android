@@ -51,5 +51,10 @@
       <option name="name" value="maven3" />
       <option name="url" value="https://maven.proximi.io/repository/android-releases/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven8" />
+      <option name="name" value="maven8" />
+      <option name="url" value="https://dl.bintray.com/maplibre/maplibre-gl-native" />
+    </remote-repository>
   </component>
 </project>

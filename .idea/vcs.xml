@@ -3,6 +3,8 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/mapbox" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mapbox/mmm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/mapbox/proximiio-mapbox-android" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/proximiio-mapbox-android" vcs="Git" />
   </component>
 </project>

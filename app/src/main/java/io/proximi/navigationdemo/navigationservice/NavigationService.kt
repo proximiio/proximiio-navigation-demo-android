@@ -486,6 +486,15 @@ class NavigationService: LifecycleService() {
             // Update user location
             userLocation.postValue(location)
         }
+
+        override fun positionExtended(
+            lat: Double,
+            lon: Double,
+            accuracy: Double,
+            type: ProximiioGeofence.EventType?
+        ) {
+            super.positionExtended(lat, lon, accuracy, type)
+        }
     }
 
     /* ------------------------------------------------------------------------------------------ */

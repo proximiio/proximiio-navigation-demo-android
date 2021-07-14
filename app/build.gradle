@@ -4,12 +4,12 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion = '29.0.3'
+    compileSdkVersion 30
+    buildToolsVersion = '30.0.3'
     defaultConfig {
         applicationId "io.proximi.navigation.demo"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true
@@ -57,7 +57,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     // Proximi.io libraries
     implementation 'io.proximi.library:core:5.1.+'
-    implementation ('io.proximi.library:mapbox:5.1.+') { exclude group: 'com.eclipsesource.j2v8' }
+    implementation project(path: ':mapbox')
+//    implementation ('io.proximi.library:mapbox:5.1.+') { exclude group: 'com.eclipsesource.j2v8' }
     // Include JS engine manually
     implementation ('com.eclipsesource.j2v8:j2v8:6.1.0@aar')
     // Image loading library
