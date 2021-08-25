@@ -57,8 +57,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     // Proximi.io libraries
     implementation 'io.proximi.library:core:5.1.+'
-    implementation project(path: ':mapbox')
-//    implementation ('io.proximi.library:mapbox:5.1.+') { exclude group: 'com.eclipsesource.j2v8' }
+//    implementation project(path: ':mapbox')
+    implementation ('io.proximi.library:mapbox:5.1.+') { exclude group: 'com.eclipsesource.j2v8' }
     // Include JS engine manually
     implementation ('com.eclipsesource.j2v8:j2v8:6.1.0@aar')
     // Image loading library
