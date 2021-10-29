@@ -4,12 +4,12 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion = '30.0.3'
     defaultConfig {
         applicationId "io.proximi.navigation.demo"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true
@@ -40,25 +40,24 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.30"
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.4.0-alpha01'
+    implementation 'com.google.android.material:material:1.5.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     // Proximi.io libraries
-    implementation 'io.proximi.library:core:5.1.+'
-//    implementation project(path: ':mapbox')
-    implementation ('io.proximi.library:mapbox:5.1.+') { exclude group: 'com.eclipsesource.j2v8' }
+    implementation project(path: ':core')
+    implementation project(path: ':mapbox')
     // Include JS engine manually
     implementation ('com.eclipsesource.j2v8:j2v8:6.1.0@aar')
     // Image loading library
