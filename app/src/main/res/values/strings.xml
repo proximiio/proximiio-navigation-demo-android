@@ -59,6 +59,8 @@
     <string name="floor_3">3rd Floor</string>
     <string name="floor_4">4th Floor</string>
     <string name="floor_5">5th Floor</string>
+    <string name="floor_6">6th Floor</string>
+    <string name="floor_7">7th Floor</string>
 
     <!-- Dialogs -->
     <string name="dialog_limited_functionality_location_description">Without location information, we can’t show you where to go.\n\nTurn location on?</string>

@@ -45,6 +45,8 @@
         <item>@string/floor_3</item>
         <item>@string/floor_4</item>
         <item>@string/floor_5</item>
+        <item>@string/floor_6</item>
+        <item>@string/floor_7</item>
     </string-array>
 
 </resources>

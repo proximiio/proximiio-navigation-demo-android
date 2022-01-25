@@ -2,7 +2,9 @@ package io.proximi.navigationdemo.ui.main
 
 import android.animation.ValueAnimator
 import android.app.Activity
-import android.content.*
+import android.content.Intent
+import android.content.IntentSender
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -23,7 +25,8 @@ import com.google.android.gms.location.*
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import io.proximi.navigationdemo.*
+import io.proximi.mapbox.library.RouteUpdateType
+import io.proximi.navigationdemo.ProximiioAuthToken
 import io.proximi.navigationdemo.R
 import io.proximi.navigationdemo.navigationservice.NavigationService
 import io.proximi.navigationdemo.ui.SettingsActivity
@@ -32,14 +35,12 @@ import io.proximi.navigationdemo.ui.SettingsActivity.Companion.ACCESSIBILITY_HEL
 import io.proximi.navigationdemo.ui.SettingsActivity.Companion.ACCESSIBILITY_ZOOM
 import io.proximi.navigationdemo.ui.main.dialogs.HelpDialogFragment
 import io.proximi.navigationdemo.ui.main.dialogs.LocationNotCoveredDialogFragment
-import io.proximi.navigationdemo.ui.main.fragments.routepreview.RoutePreviewFragment
-import io.proximi.navigationdemo.ui.searchitem.SearchItemDetailActivity
 import io.proximi.navigationdemo.ui.main.fragments.navigation.NavigationFragment
+import io.proximi.navigationdemo.ui.main.fragments.routepreview.RoutePreviewFragment
 import io.proximi.navigationdemo.ui.main.fragments.search.SearchFragment
+import io.proximi.navigationdemo.ui.searchitem.SearchItemDetailActivity
 import io.proximi.navigationdemo.utils.CustomLocationComponentActivator
-import io.proximi.navigationdemo.utils.RouteConfigurationHelper
 import io.proximi.navigationdemo.utils.ScaledContextActivity
-import io.proximi.mapbox.library.RouteUpdateType
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_appbar.*
 import kotlinx.android.synthetic.main.activity_main_content.*
@@ -49,6 +50,7 @@ class MainActivity : ScaledContextActivity() {
 
     /** Override default theme resource ID */
     override val defaultTheme = R.style.AppTheme_NoActionBar
+
     /** Override high contrast theme resource ID */
     override val highContrastTheme = R.style.HighContrastTheme_NoActionBar
 
@@ -73,8 +75,10 @@ class MainActivity : ScaledContextActivity() {
 
     /** Mapbox map reference */
     private var map: MapboxMap? = null
+
     /** Flag if map location was set, this is used to zoom to location on first location update */
     private var mapLocationInitialized = false
+
     /* TODO */
     private var mapSetup: (() -> Unit)? = null
 
@@ -89,7 +93,8 @@ class MainActivity : ScaledContextActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainActivityHelpers.onCreate()
-        viewModel = ViewModelProviders.of(this, MainActivityViewModelFactory(application)).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, MainActivityViewModelFactory(application))
+            .get(MainActivityViewModel::class.java)
 
         super.onCreate(savedInstanceState)
         setupDataObservers()
@@ -102,13 +107,22 @@ class MainActivity : ScaledContextActivity() {
         zoomInFab.setOnClickListener { map?.moveCamera(CameraUpdateFactory.zoomIn()) }
         zoomOutFab.setOnClickListener { map?.moveCamera(CameraUpdateFactory.zoomOut()) }
 
-        ArrayAdapter.createFromResource(this, R.array.main_floor_spinner_names, R.layout.floor_spinner_item_selected).also { adapter ->
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.main_floor_spinner_names,
+            R.layout.floor_spinner_item_selected
+        ).also { adapter ->
             adapter.setDropDownViewResource(R.layout.floor_spinner_item)
             floorSpinner.adapter = adapter
         }
-        floorSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        floorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 viewModel.setDisplayLevel(position)
             }
         }
@@ -118,6 +132,8 @@ class MainActivity : ScaledContextActivity() {
             setupMap(savedInstanceState)
             mapSetup = null
         }
+
+        
     }
 
     /**
@@ -152,11 +168,9 @@ class MainActivity : ScaledContextActivity() {
     override fun onBackPressed() {
         if (currentFragment is NavigationFragment || currentFragment is RoutePreviewFragment) {
             routeCancel()
-        }
-        else if (currentFragment is SearchFragment && (currentFragment as SearchFragment).collapseBottomSheet()) {
+        } else if (currentFragment is SearchFragment && (currentFragment as SearchFragment).collapseBottomSheet()) {
             // collapseBottomSheet closed it
-        }
-        else {
+        } else {
             super.onBackPressed()
         }
     }
@@ -197,7 +211,11 @@ class MainActivity : ScaledContextActivity() {
     /**
      * Process permission request results.
      */
-    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         MainActivityHelpers.onPermissionResult(this, permissions, grantResults)
         viewModel.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -218,16 +236,17 @@ class MainActivity : ScaledContextActivity() {
         bottomAnimator?.cancel()
         bottomAnimator = null
         if (animate) {
-            bottomAnimator = ValueAnimator.ofFloat(fabsWrapper.translationY, targetTranslation).apply {
-                addUpdateListener { update ->
-                    val value = update.animatedValue as Float
-                    fabsWrapper.translationY = value
-                    mapView.translationY = value / 2
+            bottomAnimator =
+                ValueAnimator.ofFloat(fabsWrapper.translationY, targetTranslation).apply {
+                    addUpdateListener { update ->
+                        val value = update.animatedValue as Float
+                        fabsWrapper.translationY = value
+                        mapView.translationY = value / 2
 //                    Log.d(TAG, "animatedTranslation = $value")
-                }
+                    }
 
-                start()
-            }
+                    start()
+                }
         } else {
             fabsWrapper.translationY = targetTranslation
             mapView.translationY = targetTranslation / 2
@@ -246,11 +265,12 @@ class MainActivity : ScaledContextActivity() {
         checkPhoneLocationEnabled {
             if (checkSupportedPlace()) {
                 HelpDialogFragment.newInstance(
-                    { dialog ->  dialog.dismiss(); callHelpNumber(); },
-                    { dialog ->  dialog.dismiss() }
+                    { dialog -> dialog.dismiss(); callHelpNumber(); },
+                    { dialog -> dialog.dismiss() }
                 ).show(supportFragmentManager, "helpDialog")
             } else {
-                LocationNotCoveredDialogFragment.newInstance { it.dismiss() }.show(supportFragmentManager, null)
+                LocationNotCoveredDialogFragment.newInstance { it.dismiss() }
+                    .show(supportFragmentManager, null)
             }
         }
     }
@@ -330,11 +350,15 @@ class MainActivity : ScaledContextActivity() {
             // Add MapboxMap on click listener to be able to click POIs on map
             mapboxMap.addOnMapClickListener { point ->
                 // Query features from selected layers only and use first to open detail activity
-                mapboxMap.queryRenderedFeatures(mapboxMap.projection.toScreenLocation(point), "proximiio-pois-icons", "proximiio-levelchangers")
+                mapboxMap.queryRenderedFeatures(
+                    mapboxMap.projection.toScreenLocation(point),
+                    "proximiio-pois-icons",
+                    "proximiio-levelchangers"
+                )
                     .map { poi -> viewModel.featuresLiveData.value!!.firstOrNull { poi.id() == it.id } }
-                    .firstOrNull()?.let {feature ->
+                    .firstOrNull()?.let { feature ->
                         SearchItemDetailActivity.startForResult(this, SEARCH_CODE, feature)
-                } != null
+                    } != null
             }
         }
     }
@@ -373,7 +397,7 @@ class MainActivity : ScaledContextActivity() {
                     it.name
                 }
             } else {
-                getString( R.string.main_title_default)
+                getString(R.string.main_title_default)
             }
             appBarTitleTextView.text = title.trim()
         })
@@ -381,10 +405,13 @@ class MainActivity : ScaledContextActivity() {
 
     /** Reference for current Fragment displayed. */
     private var currentFragment: Fragment? = null
+
     /** Handler used for delayed fragment changes. */
     private val currentFragmentChangeHandler = Handler()
+
     /** Runnable used for delayed fragment changes. */
     private var currentFragmentChangeRunnable: Runnable? = null
+
     /** Time delay used for delayed fragment changes. */
     private val currentFragmentChangeDelay = 3000L
 
@@ -402,7 +429,8 @@ class MainActivity : ScaledContextActivity() {
     private fun toggleUserLocationMarkerVisiblity() {
         map?.getStyle {
             if (map?.locationComponent?.isLocationComponentActivated == true) {
-                map!!.locationComponent.isLocationComponentEnabled = (viewModel.userLevelLiveData.value == viewModel.displayLevelLiveData.value)
+                map!!.locationComponent.isLocationComponentEnabled =
+                    (viewModel.userLevelLiveData.value == viewModel.displayLevelLiveData.value)
             }
         }
     }
@@ -424,7 +452,12 @@ class MainActivity : ScaledContextActivity() {
             if (currentFragment !is SearchFragment) {
                 currentFragment = SearchFragment.newInstance()
                 supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                    .setCustomAnimations(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out,
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                    )
                     .replace(R.id.fragmentNavigationHostFragment, currentFragment!!)
                     .commit()
             }
@@ -433,17 +466,30 @@ class MainActivity : ScaledContextActivity() {
                 if (started && currentFragment !is SearchFragment) {
                     currentFragment = SearchFragment.newInstance()
                     supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                        .setCustomAnimations(
+                            android.R.anim.fade_in,
+                            android.R.anim.fade_out,
+                            android.R.anim.fade_in,
+                            android.R.anim.fade_out
+                        )
                         .replace(R.id.fragmentNavigationHostFragment, currentFragment!!)
                         .commit()
                 }
             }
-            currentFragmentChangeHandler.postDelayed(currentFragmentChangeRunnable!!, currentFragmentChangeDelay)
-        } else if(it.eventType == RouteUpdateType.CALCULATING) {
+            currentFragmentChangeHandler.postDelayed(
+                currentFragmentChangeRunnable!!,
+                currentFragmentChangeDelay
+            )
+        } else if (it.eventType == RouteUpdateType.CALCULATING) {
             if (currentFragment !is RoutePreviewFragment) {
                 currentFragment = RoutePreviewFragment.newInstance()
                 supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                    .setCustomAnimations(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out,
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                    )
                     .replace(R.id.fragmentNavigationHostFragment, currentFragment!!)
                     .commit()
             }
@@ -451,7 +497,12 @@ class MainActivity : ScaledContextActivity() {
             if (currentFragment !is NavigationFragment) {
                 currentFragment = NavigationFragment.newInstance()
                 supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+                    .setCustomAnimations(
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out,
+                        android.R.anim.fade_in,
+                        android.R.anim.fade_out
+                    )
                     .replace(R.id.fragmentNavigationHostFragment, currentFragment!!)
                     .commit()
             }
@@ -471,7 +522,7 @@ class MainActivity : ScaledContextActivity() {
         val handMode = preferences.getString(ACCESSIBILITY_HAND_MODE, null)
         val fabsSide = when (handMode) {
             SettingsActivity.ACCESSIBILITY_HAND_MODE_LEFT -> Gravity.LEFT
-            else                                          -> Gravity.RIGHT
+            else -> Gravity.RIGHT
         }
         fabsWrapper.layoutParams = (fabsWrapper.layoutParams as FrameLayout.LayoutParams).apply {
             gravity = fabsSide or Gravity.BOTTOM
@@ -483,9 +534,11 @@ class MainActivity : ScaledContextActivity() {
             leftSettingsButton.visibility = View.GONE
             rightSettingsButton.visibility = View.VISIBLE
         }
-        val helpButtonVisibility = if(preferences.getBoolean(ACCESSIBILITY_HELP_BUTTON, true)) View.VISIBLE else View.GONE
+        val helpButtonVisibility =
+            if (preferences.getBoolean(ACCESSIBILITY_HELP_BUTTON, true)) View.VISIBLE else View.GONE
         helpButton.visibility = helpButtonVisibility
-        val zoomButtonsVisibility = if(preferences.getBoolean(ACCESSIBILITY_ZOOM, false)) View.VISIBLE else View.GONE
+        val zoomButtonsVisibility =
+            if (preferences.getBoolean(ACCESSIBILITY_ZOOM, false)) View.VISIBLE else View.GONE
         zoomInFab.visibility = zoomButtonsVisibility
         zoomOutFab.visibility = zoomButtonsVisibility
 
@@ -495,8 +548,17 @@ class MainActivity : ScaledContextActivity() {
     /**
      * Load preference for map heading type (compass or route based).
      */
-    private fun loadMapCompassHeadingForNavigation(preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(baseContext)) {
-        mapModeHelper?.setUseCompassHeadingForNavigation(preferences.getString(SettingsActivity.DISPLAY_HEADING, SettingsActivity.DISPLAY_HEADING_PATH).equals(SettingsActivity.DISPLAY_HEADING_COMPASS))
+    private fun loadMapCompassHeadingForNavigation(
+        preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+            baseContext
+        )
+    ) {
+        mapModeHelper?.setUseCompassHeadingForNavigation(
+            preferences.getString(
+                SettingsActivity.DISPLAY_HEADING,
+                SettingsActivity.DISPLAY_HEADING_PATH
+            ).equals(SettingsActivity.DISPLAY_HEADING_COMPASS)
+        )
     }
 
 
@@ -509,7 +571,7 @@ class MainActivity : ScaledContextActivity() {
     /**
      * Checks if location is enabled on device. If enabled, call [onSuccess] callback.
      */
-    fun checkPhoneLocationEnabled(onSuccess: ()-> Unit) {
+    fun checkPhoneLocationEnabled(onSuccess: () -> Unit) {
         googleApiClient = GoogleApiClient.Builder(this)
             .addApi(LocationServices.API)
             .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
@@ -521,7 +583,10 @@ class MainActivity : ScaledContextActivity() {
                     val builder: LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
                         .addLocationRequest(locationRequest)
                         .setAlwaysShow(true) //this is the key ingredient
-                    val resultPi = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
+                    val resultPi = LocationServices.SettingsApi.checkLocationSettings(
+                        googleApiClient,
+                        builder.build()
+                    )
                     resultPi.setResultCallback { result ->
                         val status: Status = result.status
                         val state: LocationSettingsStates = result.locationSettingsStates
@@ -534,9 +599,15 @@ class MainActivity : ScaledContextActivity() {
                                 try {
                                     Log.d(TAG, "location check: RESOLUTION_REQUIRED")
                                     // Show the dialog by calling startResolutionForResult(), and check the result in onActivityResult().
-                                    status.startResolutionForResult(this@MainActivity, REQUEST_CHECK_LOCATION_SETTINGS)
-                                } catch (e: IntentSender.SendIntentException) {} // Ignore the error.
-                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> { Log.d(TAG, "location check: SETTINGS_CHANGE_UNAVAILABLE") }
+                                    status.startResolutionForResult(
+                                        this@MainActivity,
+                                        REQUEST_CHECK_LOCATION_SETTINGS
+                                    )
+                                } catch (e: IntentSender.SendIntentException) {
+                                } // Ignore the error.
+                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                                Log.d(TAG, "location check: SETTINGS_CHANGE_UNAVAILABLE")
+                            }
                         }
                         googleApiClient?.disconnect()
                         googleApiClient = null
@@ -560,7 +631,8 @@ class MainActivity : ScaledContextActivity() {
     fun checkSupportedPlace(): Boolean {
         return if (viewModel.userPlaceLiveData.value == null && viewModel.enteredGeofenceListLiveData.value?.isEmpty() == true) {
             if (started) {
-                LocationNotCoveredDialogFragment.newInstance { it.dismiss() }.show(supportFragmentManager, null)
+                LocationNotCoveredDialogFragment.newInstance { it.dismiss() }
+                    .show(supportFragmentManager, null)
             }
             false
         } else {

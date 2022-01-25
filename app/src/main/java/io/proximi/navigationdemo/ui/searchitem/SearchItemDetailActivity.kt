@@ -10,12 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.mapbox.geojson.Point
-import io.proximi.navigationdemo.*
-import io.proximi.navigationdemo.ui.main.MainActivity
-import io.proximi.navigationdemo.utils.*
 import io.proximi.mapbox.data.model.Feature
 import io.proximi.mapbox.library.*
-import io.proximi.mapbox.library.Route
+import io.proximi.navigationdemo.ProximiioAuthToken
+import io.proximi.navigationdemo.R
+import io.proximi.navigationdemo.ui.main.MainActivity
+import io.proximi.navigationdemo.utils.RouteConfigurationHelper
+import io.proximi.navigationdemo.utils.ScaledContextActivity
+import io.proximi.navigationdemo.utils.UnitHelper
+import io.proximi.navigationdemo.utils.imageUrlList
 import kotlinx.android.synthetic.main.activity_search_item_detail.*
 import java.util.*
 import java.util.Calendar.DAY_OF_WEEK
@@ -31,7 +34,7 @@ class SearchItemDetailActivity : ScaledContextActivity() {
         /**
          * Start this activity for result from fragment.
          */
-        fun startForResult(fragment: Fragment, resultCode:Int, feature: Feature) {
+        fun startForResult(fragment: Fragment, resultCode: Int, feature: Feature) {
             val intent = Intent(fragment.context, SearchItemDetailActivity::class.java)
             intent.putExtra(EXTRA_FEATURE, feature)
             fragment.startActivityForResult(intent, resultCode)
@@ -40,7 +43,7 @@ class SearchItemDetailActivity : ScaledContextActivity() {
         /**
          * Start this activity for result from activity.
          */
-        fun startForResult(activity: Activity, resultCode:Int, feature: Feature) {
+        fun startForResult(activity: Activity, resultCode: Int, feature: Feature) {
             val intent = Intent(activity, SearchItemDetailActivity::class.java)
             intent.putExtra(EXTRA_FEATURE, feature)
             activity.startActivityForResult(intent, resultCode)
@@ -62,9 +65,10 @@ class SearchItemDetailActivity : ScaledContextActivity() {
         setContentView(R.layout.activity_search_item_detail)
 
         // Get Proximi.io mapbox instance.
-        proximiioMapbox = ProximiioMapbox.getInstance(baseContext, ProximiioAuthToken.TOKEN)
+        proximiioMapbox = ProximiioMapbox.getInstance(baseContext, ProximiioAuthToken.TOKEN, null)
         // Extract feature from starting intent
-        feature = intent.getParcelableExtra<Feature>(EXTRA_FEATURE) ?: error("Feature not received!")
+        feature =
+            intent.getParcelableExtra<Feature>(EXTRA_FEATURE) ?: error("Feature not received!")
 
         // Setup image gallery recycler
         setupImageGalleryRecyclerView()
@@ -75,12 +79,13 @@ class SearchItemDetailActivity : ScaledContextActivity() {
         featureNameBottomTextView.text = feature.getTitle()
         levelTextView.text = feature.levelString
         val featureDescription = feature.description
-        val descriptionVisibility = if (featureDescription != null && featureDescription.isNotEmpty()) {
-            descriptionTextView.text = feature.description
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        val descriptionVisibility =
+            if (featureDescription != null && featureDescription.isNotEmpty()) {
+                descriptionTextView.text = feature.description
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         descriptionImageView.visibility = descriptionVisibility
         descriptionTextView.visibility = descriptionVisibility
         descriptionLabelTextView.visibility = descriptionVisibility
@@ -95,14 +100,16 @@ class SearchItemDetailActivity : ScaledContextActivity() {
      * Setup [androidx.recyclerview.widget.RecyclerView] for feature's images.
      */
     private fun setupImageGalleryRecyclerView() {
-        recyclerView.layoutManager = LinearLayoutManager(baseContext, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(baseContext, LinearLayoutManager.HORIZONTAL, false)
         LinearSnapHelper().apply { attachToRecyclerView(recyclerView) }
         val typedValue = TypedValue()
         resources.getValue(R.dimen.search_item_detail_recycler_ratio, typedValue, true)
         val recyclerRatio = typedValue.float
         resources.getValue(R.dimen.search_item_detail_recycler_image_ratio, typedValue, true)
         val imageViewRatio = typedValue.float
-        val padding = (resources.displayMetrics.widthPixels.toDouble() / 4.0 * (recyclerRatio - imageViewRatio)).toInt()
+        val padding =
+            (resources.displayMetrics.widthPixels.toDouble() / 4.0 * (recyclerRatio - imageViewRatio)).toInt()
         recyclerView.setPadding(padding, 0, padding, 0)
     }
 
@@ -111,7 +118,10 @@ class SearchItemDetailActivity : ScaledContextActivity() {
      */
     private fun loadDistanceEstimates() {
         val configuration = RouteConfigurationHelper.create(baseContext, feature, listOf())
-        proximiioMapbox.routeCalculate(configuration, FeatureDistanceCalculationCallback(routeAccessibleTextView))
+        proximiioMapbox.routeCalculate(
+            configuration,
+            FeatureDistanceCalculationCallback(routeAccessibleTextView)
+        )
     }
 
     /**
@@ -119,8 +129,14 @@ class SearchItemDetailActivity : ScaledContextActivity() {
      */
     private fun startNavigation() {
         Intent().also { result ->
-            result.putExtra(MainActivity.EXTRA_LATITUDE_EXTRA, (feature.featureGeometry as Point).latitude())
-            result.putExtra(MainActivity.EXTRA_LONGITUDE_EXTRA, (feature.featureGeometry as Point).longitude())
+            result.putExtra(
+                MainActivity.EXTRA_LATITUDE_EXTRA,
+                (feature.featureGeometry as Point).latitude()
+            )
+            result.putExtra(
+                MainActivity.EXTRA_LONGITUDE_EXTRA,
+                (feature.featureGeometry as Point).longitude()
+            )
             result.putExtra(MainActivity.EXTRA_LEVEL_EXTRA, feature.getLevel() ?: 0)
             result.putExtra(MainActivity.EXTRA_TITLE_EXTRA, feature.getTitle())
             result.putExtra(MainActivity.EXTRA_POI_ID, feature.id)
@@ -141,8 +157,8 @@ class SearchItemDetailActivity : ScaledContextActivity() {
                 getMetadata() != null
                 && getMetadata()!!.has("description")
                 && getMetadata()!!["description"].isJsonObject
-                && getMetadata()!!["description"].asJsonObject.has(Locale.getDefault().language))
-            {
+                && getMetadata()!!["description"].asJsonObject.has(Locale.getDefault().language)
+            ) {
                 getMetadata()!!["description"].asJsonObject[Locale.getDefault().language].asString
             } else {
                 null
@@ -153,15 +169,19 @@ class SearchItemDetailActivity : ScaledContextActivity() {
      * Convert feature level attribute to human readable string.
      */
     private val Feature.levelString: String
-        get() = getString(when (getLevel()) {
-            0   -> R.string.floor_0
-            1   -> R.string.floor_1
-            2   -> R.string.floor_2
-            3   -> R.string.floor_3
-            4   -> R.string.floor_4
-            5   -> R.string.floor_5
-            else -> R.string.floor_0
-        })
+        get() = getString(
+            when (getLevel()) {
+                0 -> R.string.floor_0
+                1 -> R.string.floor_1
+                2 -> R.string.floor_2
+                3 -> R.string.floor_3
+                4 -> R.string.floor_4
+                5 -> R.string.floor_5
+                6 -> R.string.floor_6
+                7 -> R.string.floor_7
+                else -> R.string.floor_0
+            }
+        )
 
     /**
      * Obtain 'open hours' from feature metadata.
@@ -193,13 +213,21 @@ class SearchItemDetailActivity : ScaledContextActivity() {
     /**
      * Helper class to process [ProximiioMapbox.routeCalculate] result.
      */
-    inner class FeatureDistanceCalculationCallback(private val textView: TextView): RouteCallback {
-        override fun routeEvent(eventType: RouteUpdateType, text: String, additionalText: String?, data: RouteUpdateData?) {}
+    inner class FeatureDistanceCalculationCallback(private val textView: TextView) : RouteCallback {
+        override fun routeEvent(
+            eventType: RouteUpdateType,
+            text: String,
+            additionalText: String?,
+            data: RouteUpdateData?
+        ) {
+        }
+
         override fun onRoute(route: Route?) {
             textView.text = if (route == null) {
                 getString(R.string.search_item_detail_calculating_steps_error)
             } else {
-                val distanceInMeters = route.nodeList.fold(0.0) { acc, node -> acc + node.distanceFromLastNode }
+                val distanceInMeters =
+                    route.nodeList.fold(0.0) { acc, node -> acc + node.distanceFromLastNode }
                 UnitHelper.getDistanceInPreferenceUnit(distanceInMeters, baseContext)
             }
             stepsTextView.text = textView.text

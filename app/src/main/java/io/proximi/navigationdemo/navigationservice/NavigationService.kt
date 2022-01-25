@@ -1,7 +1,10 @@
 package io.proximi.navigationdemo.navigationservice
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -23,25 +26,27 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import io.proximi.navigationdemo.*
+import io.proximi.mapbox.data.model.Amenity
+import io.proximi.mapbox.data.model.Feature
+import io.proximi.mapbox.library.*
+import io.proximi.navigationdemo.ProximiioAuthToken
 import io.proximi.navigationdemo.R
 import io.proximi.navigationdemo.ui.SettingsActivity
 import io.proximi.navigationdemo.ui.SettingsActivity.Companion.SIMULATE_ROUTE
 import io.proximi.navigationdemo.ui.main.MainActivity
-import io.proximi.navigationdemo.utils.*
-import io.proximi.mapbox.library.*
-import io.proximi.mapbox.data.model.Amenity
-import io.proximi.mapbox.data.model.Feature
-import io.proximi.mapbox.library.Route
+import io.proximi.navigationdemo.utils.CustomLocationComponentActivator
+import io.proximi.navigationdemo.utils.RouteConfigurationHelper
+import io.proximi.navigationdemo.utils.UnitHelper
+import io.proximi.navigationdemo.utils.getDrawable
 import io.proximi.proximiiolibrary.*
+import io.proximi.proximiiolibrary.routesnapping.database.PxWayfindingRoutable
 import java.util.*
-import kotlin.math.abs
 
 /**
  * Service to handle 'background' functionality (navigation) and creates an extra layer holding
  * necessary data.
  */
-class NavigationService: LifecycleService() {
+class NavigationService : LifecycleService() {
 
     private val TAG = NavigationService::class.java.simpleName
     private lateinit var proximiioMapbox: ProximiioMapbox
@@ -52,6 +57,7 @@ class NavigationService: LifecycleService() {
     private var vibrator: Vibrator? = null
     private var mapboxMap: MapboxMap? = null
     private var handler = Handler()
+    private var simulationProcessor: ProximiioSimulationProcessor? = null
 
     companion object {
         const val NOTIFICATION_ID = 631
@@ -64,7 +70,8 @@ class NavigationService: LifecycleService() {
 
     /* Mutable livedata (private) to hold and update values */
     private val displayLevel = MutableLiveData<Int>().apply { postValue(0) }
-    private val enteredGeofenceList = MutableLiveData<List<ProximiioGeofence>>().apply { postValue(listOf()) }
+    private val enteredGeofenceList =
+        MutableLiveData<List<ProximiioGeofence>>().apply { postValue(listOf()) }
     private val userLevel = MutableLiveData<Int>().apply { postValue(0) }
     private val userPlace = MutableLiveData<ProximiioPlace?>().apply { postValue(null) }
     private val userLocation = MutableLiveData<Location?>().apply { postValue(null) }
@@ -82,7 +89,8 @@ class NavigationService: LifecycleService() {
     private val currentHazardFeature = MutableLiveData<Feature?>().apply { postValue(null) }
     private val currentSegmentFeature = MutableLiveData<Feature?>().apply { postValue(null) }
     private val route: MutableLiveData<Route?> = MutableLiveData<Route?>().apply { postValue(null) }
-    private val routeEvent: MutableLiveData<RouteEvent?> = MutableLiveData<RouteEvent?>().apply { postValue(null) }
+    private val routeEvent: MutableLiveData<RouteEvent?> =
+        MutableLiveData<RouteEvent?>().apply { postValue(null) }
 
     val currentHazardFeatureLiveData: LiveData<Feature?> get() = currentHazardFeature
     val currentSegmentFeatureLiveData: LiveData<Feature?> get() = currentSegmentFeature
@@ -92,7 +100,12 @@ class NavigationService: LifecycleService() {
     /* ------------------------------------------------------------------------------------------ */
     /* Map data */
 
-    private val poiListTypes = listOf(ProximiioFeatureType.POI, ProximiioFeatureType.ELEVATOR, ProximiioFeatureType.ESCALATOR, ProximiioFeatureType.STAIRCASE)
+    private val poiListTypes = listOf(
+        ProximiioFeatureType.POI,
+        ProximiioFeatureType.ELEVATOR,
+        ProximiioFeatureType.ESCALATOR,
+        ProximiioFeatureType.STAIRCASE
+    )
     private val poiList = MutableLiveData<List<Feature>>().apply { postValue(listOf()) }
 
     val amenitiesLiveData: LiveData<List<Amenity>> get() = proximiioMapbox.amenities
@@ -134,7 +147,7 @@ class NavigationService: LifecycleService() {
 
     private fun updatePoiList(featureList: List<Feature>) {
         val newPoiList = featureList
-            .filter { poiListTypes.contains(it.getType())}
+            .filter { poiListTypes.contains(it.getType()) }
             .filter { it.getPlaceId() == userPlaceLiveData.value?.id }
             .sortedBy { it.getTitle() }
         poiList.postValue(newPoiList)
@@ -185,7 +198,7 @@ class NavigationService: LifecycleService() {
         fun getService(): NavigationService = this@NavigationService
     }
 
-    private inner class ServiceStopTask: TimerTask() {
+    private inner class ServiceStopTask : TimerTask() {
         override fun run() {
             if (routeEvent.value?.eventType == null || routeEvent.value?.eventType == RouteUpdateType.CALCULATING || routeEvent.value?.eventType?.isRouteEnd() == true) {
                 Log.d(TAG, "service stopping")
@@ -207,49 +220,69 @@ class NavigationService: LifecycleService() {
      * generic navigation if not navigating.
      */
     private fun updateNotification(routeEvent: RouteEvent?) {
-        val intent = PendingIntent.getActivity(baseContext, 0, Intent(baseContext, MainActivity::class.java), FLAG_UPDATE_CURRENT)
+        val intent = PendingIntent.getActivity(
+            baseContext,
+            0,
+            Intent(baseContext, MainActivity::class.java),
+            FLAG_UPDATE_CURRENT
+        )
 
         createNotificationChannelHigh()
         createNotificationChannelLowPriority()
-        val notificationBuilder = if (routeEvent == null || isBound || routeEvent.eventType == RouteUpdateType.CALCULATING) {
+        val notificationBuilder =
+            if (routeEvent == null || isBound || routeEvent.eventType == RouteUpdateType.CALCULATING) {
 
-            // Basic notification (NOT navigating)
-            NotificationCompat.Builder(this,
-                NOTIFICATION_CHANNEL_ID_LOW
-            )
-                .setSmallIcon(R.drawable.ic_start_walking)
-                .setContentTitle(getString(R.string.notification_navigation_title))
-                .setOngoing(true)
-                .setAutoCancel(false)
-                .setPriority(NotificationCompat.PRIORITY_MIN)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(intent)
-        } else {
-            if (routeEvent.eventType.isRouteEnd()) {
-                Handler().postDelayed({ updateNotification(null) }, 2000)
+                // Basic notification (NOT navigating)
+                NotificationCompat.Builder(
+                    this,
+                    NOTIFICATION_CHANNEL_ID_LOW
+                )
+                    .setSmallIcon(R.drawable.ic_start_walking)
+                    .setContentTitle(getString(R.string.notification_navigation_title))
+                    .setOngoing(true)
+                    .setAutoCancel(false)
+                    .setPriority(NotificationCompat.PRIORITY_MIN)
+                    .setOnlyAlertOnce(true)
+                    .setContentIntent(intent)
+            } else {
+                if (routeEvent.eventType.isRouteEnd()) {
+                    Handler().postDelayed({ updateNotification(null) }, 2000)
+                }
+                // Navigation guidance notification (navigating)
+                NotificationCompat.Builder(
+                    this,
+                    NOTIFICATION_CHANNEL_ID_HIGH
+                )
+                    .setSmallIcon(getNotificationIcon(routeEvent))
+                    .setLargeIcon(getNotificationImage(routeEvent))
+                    .setColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.colorNotification
+                        )
+                    )
+                    .setColorized(true)
+                    .setContentTitle(routeEvent.text)
+                    .setContentText(routeEvent.additionalText)
+                    .setOngoing(true)
+                    .setAutoCancel(false)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setOnlyAlertOnce(!notificationShouldAlert(routeEvent))
+                    .setContentIntent(intent)
             }
-            // Navigation guidance notification (navigating)
-            NotificationCompat.Builder(this,
-                NOTIFICATION_CHANNEL_ID_HIGH
-            )
-                .setSmallIcon(getNotificationIcon(routeEvent))
-                .setLargeIcon(getNotificationImage(routeEvent))
-                .setColor(ContextCompat.getColor(this,
-                    R.color.colorNotification
-                ))
-                .setColorized(true)
-                .setContentTitle(routeEvent.text)
-                .setContentText(routeEvent.additionalText)
-                .setOngoing(true)
-                .setAutoCancel(false)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setOnlyAlertOnce(!notificationShouldAlert(routeEvent))
-                .setContentIntent(intent)
-        }
         // If service is not bound, add action to cancel navigation
         if (!isBound) {
-            val pi = PendingIntent.getBroadcast(baseContext, 0, Intent(baseContext, StopNavigationServiceReceiver::class.java), 0)
-            notificationBuilder.addAction(R.id.cancelRouteButton, getString(R.string.notification_action_turn_off), pi)
+            val pi = PendingIntent.getBroadcast(
+                baseContext,
+                0,
+                Intent(baseContext, StopNavigationServiceReceiver::class.java),
+                0
+            )
+            notificationBuilder.addAction(
+                R.id.cancelRouteButton,
+                getString(R.string.notification_action_turn_off),
+                pi
+            )
         }
         val notification = notificationBuilder.build()
         startForeground(NOTIFICATION_ID, notification)
@@ -286,10 +319,11 @@ class NavigationService: LifecycleService() {
             val name = getString(R.string.notification_navigation_channel_name)
             val descriptionText = getString(R.string.notification_navigation_channel_description)
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID_HIGH, name, importance).apply {
-                description = descriptionText
+            val channel =
+                NotificationChannel(NOTIFICATION_CHANNEL_ID_HIGH, name, importance).apply {
+                    description = descriptionText
 
-            }
+                }
             // Register the channel with the system
             NotificationManagerCompat.from(this).createNotificationChannel(channel)
         }
@@ -301,11 +335,11 @@ class NavigationService: LifecycleService() {
     private fun getNotificationIcon(routeEvent: RouteEvent): Int {
         return when (routeEvent.eventType) {
             RouteUpdateType.DIRECTION_IMMEDIATE -> routeEvent.data!!.stepDirection.getDrawable()
-            RouteUpdateType.DIRECTION_SOON      -> routeEvent.data!!.stepDirection.getDrawable()
-            RouteUpdateType.FINISHED            -> R.drawable.ic_preview_destination
-            RouteUpdateType.CANCELED            -> R.drawable.ic_cancel
-            RouteUpdateType.RECALCULATING       -> R.drawable.ic_my_location
-            else                                                    -> R.drawable.ic_start_walking
+            RouteUpdateType.DIRECTION_SOON -> routeEvent.data!!.stepDirection.getDrawable()
+            RouteUpdateType.FINISHED -> R.drawable.ic_preview_destination
+            RouteUpdateType.CANCELED -> R.drawable.ic_cancel
+            RouteUpdateType.RECALCULATING -> R.drawable.ic_my_location
+            else -> R.drawable.ic_start_walking
         }
     }
 
@@ -315,10 +349,10 @@ class NavigationService: LifecycleService() {
     private fun getNotificationImage(routeEvent: RouteEvent): Bitmap? {
         val imageId = when (routeEvent.eventType) {
             RouteUpdateType.DIRECTION_IMMEDIATE -> routeEvent.data!!.stepDirection.getDrawable()
-            RouteUpdateType.DIRECTION_SOON      -> routeEvent.data!!.stepDirection.getDrawable()
-            RouteUpdateType.FINISHED            -> R.drawable.ic_preview_destination
-            RouteUpdateType.CANCELED            -> R.drawable.ic_cancel
-            else                                                    -> null
+            RouteUpdateType.DIRECTION_SOON -> routeEvent.data!!.stepDirection.getDrawable()
+            RouteUpdateType.FINISHED -> R.drawable.ic_preview_destination
+            RouteUpdateType.CANCELED -> R.drawable.ic_cancel
+            else -> null
         }
         return imageId?.let {
             val drawable = resources.getDrawable(it)
@@ -333,9 +367,9 @@ class NavigationService: LifecycleService() {
     private fun notificationShouldAlert(routeEvent: RouteEvent): Boolean {
         val alert = (
                 routeEvent.eventType == RouteUpdateType.DIRECTION_SOON
-                || routeEvent.eventType == RouteUpdateType.DIRECTION_IMMEDIATE
-            ) && notificationLastAlertNodeIndex != routeEvent.data!!.nodeIndex
-        if(alert) {
+                        || routeEvent.eventType == RouteUpdateType.DIRECTION_IMMEDIATE
+                ) && notificationLastAlertNodeIndex != routeEvent.data!!.nodeIndex
+        if (alert) {
             notificationLastAlertNodeIndex = routeEvent.data?.nodeIndex ?: 0
         }
         return alert
@@ -344,28 +378,22 @@ class NavigationService: LifecycleService() {
     /* ------------------------------------------------------------------------------------------ */
     /* Activity interface */
 
-    fun searchPois(filter: ProximiioSearchFilter, text: String?, amenityCategoryId: String?): List<io.proximi.mapbox.data.model.Feature> {
+    fun searchPois(
+        filter: ProximiioSearchFilter,
+        text: String?,
+        amenityCategoryId: String?
+    ): List<io.proximi.mapbox.data.model.Feature> {
         return proximiioMapbox.search(filter, text, amenityCategoryId)
     }
 
     fun onActivityStart() {
         proximiioMapbox.onStart()
-        if (isPdrSupported()) {
-            Log.d(TAG, "PDR enabled")
-            proximiioAPI.pdrEnabled(true)
-        }
         isBound = true
         updateNotification(routeEvent.value)
     }
 
-    fun isPdrSupported(): Boolean {
-        return proximiioAPI.isPdrSupported(baseContext)
-    }
-
     fun onActivityStop() {
         isBound = false
-        proximiioAPI.pdrEnabled(false)
-        Log.d(TAG, "PDR disabled")
 //        if (routeEvent.value?.eventType?.isRouteEnd() == true) routeEvent.postValue(null)
         if (routeEvent.value?.eventType?.isRouteEnd() == false) {
             updateNotification(routeEvent.value)
@@ -385,8 +413,8 @@ class NavigationService: LifecycleService() {
         this.mapboxMap = mapboxMap
         proximiioMapbox.onMapReady(mapboxMap, activator)
         mapboxMap.getStyle {
-                proximiioMapbox.updateDisplayLevel(displayLevel.value!!)
-                proximiioMapbox.updateUserLevel(displayLevel.value!!)
+            proximiioMapbox.updateDisplayLevel(displayLevel.value!!)
+            proximiioMapbox.updateUserLevel(displayLevel.value!!)
         }
     }
 
@@ -415,7 +443,11 @@ class NavigationService: LifecycleService() {
         proximiioMapbox.routeCalculate(configuration, routeCallback)
     }
 
-    fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         proximiioAPI.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -431,20 +463,25 @@ class NavigationService: LifecycleService() {
             notificationMode = ProximiioOptions.NotificationMode.DISABLED
         }
 
+        // setup processors
+        simulationProcessor = ProximiioSimulationProcessor(this)
+
         // Create Proximi.io API
         proximiioAPI = ProximiioAPI(TAG, this, options).apply {
             setAuth(ProximiioAuthToken.TOKEN, true)
             setListener(apiListener)
-            pdrCorrectionThreshold(4.0)
-            snapToRouteEnabled(true)
-            snapToRouteThreshold(20.0)
+            //pdrCorrectionThreshold(4.0)
+            //snapToRouteEnabled(true)
+            //snapToRouteThreshold(20.0)
         }
+
+        proximiioAPI.setProcessors(arrayListOf(simulationProcessor))
     }
 
     /**
      * Proximiio API listener.
      */
-    private val apiListener = object: ProximiioListener() {
+    private val apiListener = object : ProximiioListener() {
 
         /**
          * Update level values when location changed to different floor.
@@ -454,13 +491,17 @@ class NavigationService: LifecycleService() {
             val floorLevel = floor?.floorNumber ?: 0
 
             // Update display level if it is currently also shown on map
-            if (userLevel.value == displayLevel.value) { displayLevel.postValue(floorLevel) }
+            if (userLevel.value == displayLevel.value) {
+                displayLevel.postValue(floorLevel)
+            }
 
             // Update user level
             userLevel.postValue(floorLevel)
 
             // Update place if it has changed
             if (userPlace.value != floor?.place) userPlace.postValue(floor?.place)
+
+            simulationProcessorRoutes()
         }
 
         /**
@@ -483,7 +524,7 @@ class NavigationService: LifecycleService() {
          * Update user position.
          */
         override fun position(location: Location) {
-            // Update user location
+            // Update user locationchangedFloor
             userLocation.postValue(location)
         }
 
@@ -504,23 +545,24 @@ class NavigationService: LifecycleService() {
      * Create and setup ProximiioMapbox SDK.
      */
     private fun setupMapSdk() {
-        proximiioMapbox = ProximiioMapbox.getInstance(baseContext, ProximiioAuthToken.TOKEN).apply {
-            setFloorPlanVisibility(false)
-            hazardCallback(hazardCallback)
-            segmentCallback(segmentCallback)
-            setUserLocationToRouteSnappingEnabled(true)
-            setUserLocationToRouteSnappingThreshold(4.0)
-            setRouteFinishThreshold(2.0)
-            setStepImmediateThreshold(2.5)
-            setStepPreparationThreshold(5.0)
-            setRoutePathFixDistance(1.0)
-        }
+        proximiioMapbox =
+            ProximiioMapbox.getInstance(baseContext, ProximiioAuthToken.TOKEN, null).apply {
+                setFloorPlanVisibility(false)
+                hazardCallback(hazardCallback)
+                segmentCallback(segmentCallback)
+                setUserLocationToRouteSnappingEnabled(true)
+                setUserLocationToRouteSnappingThreshold(4.0)
+                setRouteFinishThreshold(2.0)
+                setStepImmediateThreshold(2.5)
+                setStepPreparationThreshold(5.0)
+                setRoutePathFixDistance(1.0)
+            }
         // Setup observers to pass data updates to ProximiioMapbox SDK
         displayLevel.observe(this, Observer { proximiioMapbox.updateDisplayLevel(it) })
-        userLocation.observe(this, Observer { it?.let { proximiioMapbox.updateUserLocation(it) }})
+        userLocation.observe(this, Observer { it?.let { proximiioMapbox.updateUserLocation(it) } })
         proximiioMapbox.syncStatus.observe(this, Observer {
             if (it == SyncStatus.INITIAL_NETWORK_ERROR || it == SyncStatus.INITIAL_ERROR) {
-                handler.postDelayed({proximiioMapbox.startSyncNow()}, 1000)
+                handler.postDelayed({ proximiioMapbox.startSyncNow() }, 1000)
             }
         })
         userLevel.observe(this, Observer { proximiioMapbox.updateUserLevel(it) })
@@ -542,8 +584,10 @@ class NavigationService: LifecycleService() {
         if (preferences.getBoolean(SettingsActivity.TTS_ENABLED, true)) {
             if (tts == null) {
                 proximiioMapbox.ttsDisable()
-                Toast.makeText(baseContext,
-                    R.string.tts_not_available, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    baseContext,
+                    R.string.tts_not_available, Toast.LENGTH_LONG
+                ).show()
                 Log.d(TAG, "Route start: TTS was not available.")
             } else {
                 proximiioMapbox.ttsEnable(tts!!)
@@ -554,27 +598,61 @@ class NavigationService: LifecycleService() {
             proximiioMapbox.ttsDisable()
         }
         // Load selected metadata
-        val metadataKey = preferences.getString(SettingsActivity.ACCESSIBILITY_TTS_DISABILITY, "6")!!.toInt()
+        val metadataKey =
+            preferences.getString(SettingsActivity.ACCESSIBILITY_TTS_DISABILITY, "6")!!.toInt()
         val metadataKeys = if (metadataKey == 6) listOf<Int>() else listOf(metadataKey)
         val segmentAlert = preferences.getBoolean(SettingsActivity.TTS_SEGMENT_ENABLED, true)
         proximiioMapbox.apply {
             // TTS settings
-            ttsHeadingCorrectionEnabled(preferences.getBoolean(SettingsActivity.TTS_HEADING_CORRECTION, true))
-            ttsDecisionAlert(preferences.getBoolean(SettingsActivity.TTS_DECISION_ENABLED, false), metadataKeys)
-            ttsHazardAlert(preferences.getBoolean(SettingsActivity.TTS_HAZARD_ENABLED, true), metadataKeys)
-            ttsLandmarkAlert(preferences.getBoolean(SettingsActivity.TTS_LANDMARK_ENABLED, true), metadataKeys)
+            ttsHeadingCorrectionEnabled(
+                preferences.getBoolean(
+                    SettingsActivity.TTS_HEADING_CORRECTION,
+                    true
+                )
+            )
+            ttsDecisionAlert(
+                preferences.getBoolean(SettingsActivity.TTS_DECISION_ENABLED, false),
+                metadataKeys
+            )
+            ttsHazardAlert(
+                preferences.getBoolean(SettingsActivity.TTS_HAZARD_ENABLED, true),
+                metadataKeys
+            )
+            ttsLandmarkAlert(
+                preferences.getBoolean(SettingsActivity.TTS_LANDMARK_ENABLED, true),
+                metadataKeys
+            )
             ttsSegmentAlert(segmentAlert, segmentAlert, metadataKeys)
             ttsLevelChangerMetadataKeys(metadataKeys)
-            ttsReassuranceInstructionEnabled(preferences.getBoolean(SettingsActivity.TTS_REASSURANCE_ENABLED, false))
-            ttsReassuranceInstructionDistance(preferences.getString(SettingsActivity.TTS_REASSURANCE_DISTANCE, "15")!!.toDouble())
+            ttsReassuranceInstructionEnabled(
+                preferences.getBoolean(
+                    SettingsActivity.TTS_REASSURANCE_ENABLED,
+                    false
+                )
+            )
+            ttsReassuranceInstructionDistance(
+                preferences.getString(
+                    SettingsActivity.TTS_REASSURANCE_DISTANCE,
+                    "15"
+                )!!.toDouble()
+            )
             ttsDestinationMetadataKeys(metadataKeys)
             // Set desired units
-            if (preferences.getString(SettingsActivity.ROUTE_UNITS, SettingsActivity.ROUTE_UNITS_STEP)!! == SettingsActivity.ROUTE_UNITS_STEP) {
+            if (preferences.getString(
+                    SettingsActivity.ROUTE_UNITS,
+                    SettingsActivity.ROUTE_UNITS_STEP
+                )!! == SettingsActivity.ROUTE_UNITS_STEP
+            ) {
                 setUnitConversion(UnitHelper.STEPS)
             } else {
                 setUnitConversion(UnitHelper.METERS)
             }
-            setRouteSimulationEnabled(sharedPreferences.getBoolean(SIMULATE_ROUTE, false)) { level, _, finished ->
+            setRouteSimulationEnabled(
+                sharedPreferences.getBoolean(
+                    SIMULATE_ROUTE,
+                    false
+                )
+            ) { level, _, finished ->
                 if (this@NavigationService.displayLevel.value != level) {
                     this@NavigationService.displayLevel.postValue(level)
                 }
@@ -591,6 +669,17 @@ class NavigationService: LifecycleService() {
         }
     }
 
+    // Simulation processor logic
+    private fun simulationProcessorRoutes(currentRoute: Route? = null) {
+        val currentFloor = userLevel.value
+
+        val routesForCurrentFloor = currentRoute?.nodeList?.filter { it.level == currentFloor }
+            ?.mapNotNull { it.lineStringFeatureTo }
+            ?.map { PxWayfindingRoutable.fromGeoJsonFeature(it, null) }?.toCollection(ArrayList())
+
+        simulationProcessor?.set(routesForCurrentFloor ?: arrayListOf())
+    }
+
     /**
      * Listener for route navigation updates.
      */
@@ -599,24 +688,31 @@ class NavigationService: LifecycleService() {
         /**
          * Remember segment number where vibration was last triggered to prevent repeats.
          */
-        private var vibratedSegmentNode:Int? = null
+        private var vibratedSegmentNode: Int? = null
 
         /**
          * Route was (re)calculated updated.
          */
         override fun onRoute(newRoute: Route?) {
             route.postValue(newRoute)
+            simulationProcessorRoutes(newRoute)
         }
 
         /**
          * Route navigation event callbacks,
          */
-        override fun routeEvent(eventType: RouteUpdateType, text: String, additionalText: String?, data: RouteUpdateData?) {
+        override fun routeEvent(
+            eventType: RouteUpdateType,
+            text: String,
+            additionalText: String?,
+            data: RouteUpdateData?
+        ) {
             if (eventType.isRouteEnd()) {
                 vibratedSegmentNode = null
                 currentHazardFeature.postValue(null)
                 currentSegmentFeature.postValue(null)
                 route.postValue(null)
+                simulationProcessorRoutes()
             }
             if (
                 (eventType == RouteUpdateType.DIRECTION_IMMEDIATE && data!!.nodeIndex != vibratedSegmentNode)
@@ -625,19 +721,21 @@ class NavigationService: LifecycleService() {
                 vibrate()
                 vibratedSegmentNode = data?.nodeIndex
             }
-            routeEvent.postValue(RouteEvent(
-                eventType,
-                text,
-                additionalText,
-                data
-            ))
+            routeEvent.postValue(
+                RouteEvent(
+                    eventType,
+                    text,
+                    additionalText,
+                    data
+                )
+            )
         }
     }
 
     /**
      * Proximiio mapbox callback for hazards during navigation.
      */
-    private val hazardCallback = object: NavigationInterface.HazardCallback {
+    private val hazardCallback = object : NavigationInterface.HazardCallback {
         override fun enteredHazardRange(hazard: Feature) {
             currentHazardFeature.postValue(hazard)
         }
@@ -652,7 +750,7 @@ class NavigationService: LifecycleService() {
     /**
      * Proximiio mapbox callback for segments during navigation.
      */
-    private val segmentCallback = object: NavigationInterface.SegmentCallback {
+    private val segmentCallback = object : NavigationInterface.SegmentCallback {
         private var currentSegmentList = listOf<Feature>()
 
         override fun onSegmentEntered(segment: Feature) {
@@ -710,7 +808,11 @@ class NavigationService: LifecycleService() {
                 else -> R.string.tts_start_unknown
             }
             Log.d(TAG, "TTS setup: success ready. ($status)")
-            if (status != TextToSpeech.SUCCESS) Toast.makeText(baseContext, stringId, Toast.LENGTH_LONG).show()
+            if (status != TextToSpeech.SUCCESS) Toast.makeText(
+                baseContext,
+                stringId,
+                Toast.LENGTH_LONG
+            ).show()
         }
 
     }
@@ -725,7 +827,10 @@ class NavigationService: LifecycleService() {
         route.observe(this, Observer {
             if (it != null) {
                 val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-                wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, NavigationService::class.java.simpleName)
+                wakeLock = pm.newWakeLock(
+                    PowerManager.PARTIAL_WAKE_LOCK,
+                    NavigationService::class.java.simpleName
+                )
                 wakeLock!!.acquire(15 * 60 * 1000)
             } else {
                 if (wakeLock?.isHeld == true) wakeLock?.release()

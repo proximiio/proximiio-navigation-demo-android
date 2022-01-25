@@ -8,7 +8,7 @@ android {
     buildToolsVersion = '30.0.3'
     defaultConfig {
         applicationId "io.proximi.navigation.demo"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 31
         versionCode 1
         versionName "1.0.0"
