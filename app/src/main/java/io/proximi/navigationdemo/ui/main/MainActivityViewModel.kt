@@ -11,11 +11,14 @@ import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.*
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import io.proximi.navigationdemo.utils.CustomLocationComponentActivator
-import io.proximi.navigationdemo.navigationservice.NavigationService
 import io.proximi.mapbox.data.model.Amenity
 import io.proximi.mapbox.data.model.Feature
-import io.proximi.mapbox.library.*
+import io.proximi.mapbox.library.ProximiioSearchFilter
+import io.proximi.mapbox.library.Route
+import io.proximi.mapbox.library.RouteCallback
+import io.proximi.mapbox.library.RouteConfiguration
+import io.proximi.navigationdemo.navigationservice.NavigationService
+import io.proximi.navigationdemo.utils.CustomLocationComponentActivator
 import io.proximi.proximiiolibrary.ProximiioGeofence
 import io.proximi.proximiiolibrary.ProximiioPlace
 
@@ -43,7 +46,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val userLevel = MutableLiveData<Int>().apply { value = 0 }
     private val userPlace = MutableLiveData<ProximiioPlace?>()
     private val userLocation = MutableLiveData<Location?>()
-    private val enteredGeofenceList = MutableLiveData<List<ProximiioGeofence>>().apply { postValue(listOf()) }
+    private val enteredGeofenceList =
+        MutableLiveData<List<ProximiioGeofence>>().apply { postValue(listOf()) }
+    private val markers =
+        MutableLiveData<List<com.mapbox.geojson.Feature>>().apply { postValue(listOf()) }
 
     /* Public access for live data provided to activity. */
     val routeLiveData: LiveData<Route?> get() = route
@@ -58,6 +64,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val userLocationLiveData: LiveData<Location?> get() = userLocation
     val userPlaceLiveData: LiveData<ProximiioPlace?> = userPlace
     val enteredGeofenceListLiveData: LiveData<List<ProximiioGeofence>> get() = enteredGeofenceList
+    val markersLiveData: LiveData<List<com.mapbox.geojson.Feature>> get() = markers
 
     /** Callback reference to start navigation. Necessary due to the service binding which might happen after activity is resumed and route start invoked. */
     private var routeStart: (() -> Unit)? = null
@@ -157,14 +164,22 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     /**
      * Search for [Feature]s in Proximi.io Mapbox SDK.
      */
-    fun searchPois(filter: ProximiioSearchFilter, text: String?, amenityCategoryId: String?): List<Feature> {
+    fun searchPois(
+        filter: ProximiioSearchFilter,
+        text: String?,
+        amenityCategoryId: String?
+    ): List<Feature> {
         return navigationService?.searchPois(filter, text, amenityCategoryId) ?: listOf()
     }
 
     /**
      *  Pass permission request results to Proximi.io SDK.
      */
-    fun onRequestPermissionsResult(requestCode: Int,permissions: Array<out String>,grantResults: IntArray) {
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         navigationService?.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -190,6 +205,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         override fun onServiceDisconnected(arg0: ComponentName) {
             navigationService = null
         }
+    }
+
+    public fun set(markers: List<com.mapbox.geojson.Feature>) {
+        this.markers.postValue(markers)
     }
 
     /**
@@ -226,8 +245,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         navigationService?.let { navigationService ->
             navigationService.routeLiveData.observeForever(routeObserver)
             navigationService.routeEventLiveData.observeForever(routeEventObserver)
-            navigationService.currentHazardFeatureLiveData.observeForever(currentHazardFeatureObserver)
-            navigationService.currentSegmentFeatureLiveData.observeForever(currentSegmentFeatureObserver)
+            navigationService.currentHazardFeatureLiveData.observeForever(
+                currentHazardFeatureObserver
+            )
+            navigationService.currentSegmentFeatureLiveData.observeForever(
+                currentSegmentFeatureObserver
+            )
             navigationService.amenitiesLiveData.observeForever(amenitiesObserver)
             navigationService.featuresLiveData.observeForever(featuresObserver)
             navigationService.poisLiveData.observeForever(poisObserver)
@@ -246,8 +269,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         navigationService?.let { navigationService ->
             navigationService.routeLiveData.removeObserver(routeObserver)
             navigationService.routeEventLiveData.removeObserver(routeEventObserver)
-            navigationService.currentHazardFeatureLiveData.removeObserver(currentHazardFeatureObserver)
-            navigationService.currentSegmentFeatureLiveData.removeObserver(currentSegmentFeatureObserver)
+            navigationService.currentHazardFeatureLiveData.removeObserver(
+                currentHazardFeatureObserver
+            )
+            navigationService.currentSegmentFeatureLiveData.removeObserver(
+                currentSegmentFeatureObserver
+            )
             navigationService.amenitiesLiveData.removeObserver(amenitiesObserver)
             navigationService.featuresLiveData.removeObserver(featuresObserver)
             navigationService.poisLiveData.removeObserver(poisObserver)
@@ -261,9 +288,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     /* Observers for data provided by NavigationService */
     private val routeObserver = Observer<Route?> { route.postValue(it) }
-    private val routeEventObserver = Observer<NavigationService.RouteEvent?> { routeEvent.postValue(it) }
-    private val currentHazardFeatureObserver = Observer<Feature?> { currentHazardFeature.postValue(it) }
-    private val currentSegmentFeatureObserver = Observer<Feature?> { currentSegmentFeature.postValue(it) }
+    private val routeEventObserver =
+        Observer<NavigationService.RouteEvent?> { routeEvent.postValue(it) }
+    private val currentHazardFeatureObserver =
+        Observer<Feature?> { currentHazardFeature.postValue(it) }
+    private val currentSegmentFeatureObserver =
+        Observer<Feature?> { currentSegmentFeature.postValue(it) }
     private val amenitiesObserver = Observer<List<Amenity>> { amenityList.postValue(it) }
     private val featuresObserver = Observer<List<Feature>> { featureList.postValue(it) }
     private val poisObserver = Observer<List<Feature>> { poiList.postValue(it) }
@@ -271,15 +301,16 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val userLevelObserver = Observer<Int> { userLevel.postValue(it) }
     private val userLocationObserver = Observer<Location?> { userLocation.postValue(it) }
     private val userPlaceObserver = Observer<ProximiioPlace?> { userPlace.postValue(it) }
-    private val geofenceObserver = Observer<List<ProximiioGeofence>> { enteredGeofenceList.postValue(it) }
-
+    private val geofenceObserver =
+        Observer<List<ProximiioGeofence>> { enteredGeofenceList.postValue(it) }
 }
 
 /**
  * Factory class to create [MainActivityViewModel].
  */
-class MainActivityViewModelFactory(private val application: Application): ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MainActivityViewModel(application) as T
-    }
+abstract class MainActivityViewModelFactory(private val application: Application) :
+    ViewModelProvider.Factory {
+//    fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//        return MainActivityViewModel(application) as T
+//    }
 }

@@ -26,48 +26,57 @@ class MapModeHelper(
 
     /** Mapbox location component stale status */
     var stale = false
-        set (value) { field = value; applyState() }
+        set(value) {
+            field = value; applyState()
+        }
 
     /** Mapbox location component is activated */
     var locationComponentActivated = false
-        set (value) { field = value; if (value) onLocationComponentActivated(); }
+        set(value) {
+            field = value; if (value) onLocationComponentActivated(); }
 
     /** Evaluate if device has compass capabilites */
     private val hasCompassCapabilities = deviceHasCompassCapability(locationButton.context)
+
     /** Flag if we compass heading or 'route' heading should be used for navigation */
     private var useCompassHeadingForNavigation = false
+
     /** Flag if navigation is in progress currently */
     private var isNavigating = false
+
     /** Current map settings */
     private var currentState = States.TRACKING_BEARING
-        set(value) { if (field != value ) { field = value; applyState(); } }
+        set(value) {
+            if (field != value) {
+                field = value; applyState(); }
+        }
 
     init {
         locationButton.setOnClickListener { showCurrentLocation() }
         orientationButton.setOnClickListener { toggleMapOrientation() }
-        map.addOnMoveListener(object: MapboxMap.OnMoveListener {
+        map.addOnMoveListener(object : MapboxMap.OnMoveListener {
             override fun onMove(detector: MoveGestureDetector) {}
             override fun onMoveEnd(detector: MoveGestureDetector) {}
             override fun onMoveBegin(detector: MoveGestureDetector) {
                 currentState = when (currentState) {
-                    States.TRACKING_NORTH   -> States.CUSTOM_NORTH
+                    States.TRACKING_NORTH -> States.CUSTOM_NORTH
                     States.TRACKING_BEARING -> States.CUSTOM_CUSTOM
-                    States.TRACKING_CUSTOM  -> States.CUSTOM_CUSTOM
-                    States.CUSTOM_NORTH     -> States.CUSTOM_CUSTOM
-                    States.CUSTOM_CUSTOM    -> States.CUSTOM_CUSTOM
+                    States.TRACKING_CUSTOM -> States.CUSTOM_CUSTOM
+                    States.CUSTOM_NORTH -> States.CUSTOM_CUSTOM
+                    States.CUSTOM_CUSTOM -> States.CUSTOM_CUSTOM
                 }
             }
         })
-        map.addOnRotateListener(object: MapboxMap.OnRotateListener {
+        map.addOnRotateListener(object : MapboxMap.OnRotateListener {
             override fun onRotate(detector: RotateGestureDetector) {}
             override fun onRotateEnd(detector: RotateGestureDetector) {}
             override fun onRotateBegin(detector: RotateGestureDetector) {
                 currentState = when (currentState) {
-                    States.TRACKING_NORTH   -> States.TRACKING_CUSTOM
+                    States.TRACKING_NORTH -> States.TRACKING_CUSTOM
                     States.TRACKING_BEARING -> States.TRACKING_CUSTOM
-                    States.TRACKING_CUSTOM  -> States.TRACKING_CUSTOM
-                    States.CUSTOM_NORTH     -> States.CUSTOM_CUSTOM
-                    States.CUSTOM_CUSTOM    -> States.CUSTOM_CUSTOM
+                    States.TRACKING_CUSTOM -> States.TRACKING_CUSTOM
+                    States.CUSTOM_NORTH -> States.CUSTOM_CUSTOM
+                    States.CUSTOM_CUSTOM -> States.CUSTOM_CUSTOM
                 }
             }
         })
@@ -113,7 +122,8 @@ class MapModeHelper(
             map.locationComponent.cameraMode = CameraMode.TRACKING
             map.locationComponent.renderMode = RenderMode.NORMAL
         } else if (map.locationComponent.isLocationComponentActivated) {
-            map.locationComponent.cameraMode = if (isNavigating && !useCompassHeadingForNavigation) currentState.navigationCameraMode else currentState.mapCameraMode
+            map.locationComponent.cameraMode =
+                if (isNavigating && !useCompassHeadingForNavigation) currentState.navigationCameraMode else currentState.mapCameraMode
             applyRenderMode()
         }
         val color = if (currentState.orientationEnabled) {
@@ -167,7 +177,14 @@ class MapModeHelper(
     private fun zoomToLocation() {
         if (map.locationComponent.lastKnownLocation != null) {
             val location = map.locationComponent.lastKnownLocation!!
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 20.0))
+            map.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        location.latitude,
+                        location.longitude
+                    ), 20.0
+                )
+            )
         }
     }
 
@@ -178,16 +195,16 @@ class MapModeHelper(
         if (locationComponentActivated) {
             if (hasCompassCapabilities) {
                 currentState = when (currentState) {
-                    States.TRACKING_NORTH   -> States.TRACKING_BEARING
+                    States.TRACKING_NORTH -> States.TRACKING_BEARING
                     States.TRACKING_BEARING -> States.TRACKING_NORTH
-                    States.TRACKING_CUSTOM  -> States.TRACKING_BEARING
-                    States.CUSTOM_NORTH     -> States.TRACKING_BEARING
-                    States.CUSTOM_CUSTOM    -> States.TRACKING_BEARING
+                    States.TRACKING_CUSTOM -> States.TRACKING_BEARING
+                    States.CUSTOM_NORTH -> States.TRACKING_BEARING
+                    States.CUSTOM_CUSTOM -> States.TRACKING_BEARING
                 }
             } else {
                 when (currentState) {
-                    States.TRACKING_CUSTOM  -> currentState = States.TRACKING_NORTH
-                    States.CUSTOM_CUSTOM    -> currentState = States.CUSTOM_NORTH
+                    States.TRACKING_CUSTOM -> currentState = States.TRACKING_NORTH
+                    States.CUSTOM_CUSTOM -> currentState = States.CUSTOM_NORTH
                 }
             }
         }
@@ -204,7 +221,11 @@ class MapModeHelper(
     /**
      * List of desired map states for easier manipulation.
      */
-    private enum class States(val mapCameraMode: Int, val navigationCameraMode: Int, val orientationEnabled: Boolean) {
+    private enum class States(
+        val mapCameraMode: Int,
+        val navigationCameraMode: Int,
+        val orientationEnabled: Boolean
+    ) {
         TRACKING_NORTH(CameraMode.TRACKING_GPS_NORTH, CameraMode.TRACKING_GPS_NORTH, false),
         TRACKING_CUSTOM(CameraMode.TRACKING, CameraMode.TRACKING, false),
         TRACKING_BEARING(CameraMode.TRACKING_COMPASS, CameraMode.TRACKING_GPS, true),

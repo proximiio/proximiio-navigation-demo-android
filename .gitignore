@@ -15,3 +15,8 @@
 app/flavorProduction/*
 app/release/*
 app/release/*
+
+core/
+mapbox/
+
+.idea/

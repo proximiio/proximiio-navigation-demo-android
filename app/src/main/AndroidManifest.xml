@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
             android:name="io.proximi.navigationdemo.App"
@@ -38,6 +38,7 @@
                 android:screenOrientation="unspecified"
                 android:theme="@style/AppTheme.Settings" />
         <activity
+                android:exported="true"
                 android:name="io.proximi.navigationdemo.ui.main.MainActivity"
                 android:label="@string/title_activity_main"
                 android:launchMode="singleInstance"
