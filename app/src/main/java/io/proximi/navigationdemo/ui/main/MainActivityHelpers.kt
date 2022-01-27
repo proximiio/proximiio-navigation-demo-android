@@ -5,12 +5,14 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
-import io.proximi.navigationdemo.ui.main.dialogs.DialogFragmentFactory
 import io.proximi.navigationdemo.ui.SettingsActivity
+import io.proximi.navigationdemo.ui.main.dialogs.DialogFragmentFactory
 import io.proximi.proximiiolibrary.ProximiioAPI
 import io.proximi.proximiiolibrary.ProximiioAPI.BLUETOOTH_REQUEST
+import io.proximi.proximiiolibrary.ProximiioAPI.BLUETOOTH_REQUEST_S
 
 /**
  * Helper class to that handles:
@@ -49,7 +51,11 @@ object MainActivityHelpers {
      */
     private fun checkAndRequestLocationPermission(mainActivity: MainActivity) {
         if (!hasLocationPermission(mainActivity)) {
-            ActivityCompat.requestPermissions(mainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), ProximiioAPI.PERMISSION_REQUEST)
+            ActivityCompat.requestPermissions(
+                mainActivity,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                ProximiioAPI.PERMISSION_REQUEST
+            )
         } else {
             checkAndRequestBluetooth(mainActivity)
         }
@@ -59,18 +65,45 @@ object MainActivityHelpers {
      * Test if location permission was already granted.
      */
     private fun hasLocationPermission(mainActivity: MainActivity): Boolean {
-        return ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ActivityCompat.checkSelfPermission(
+            mainActivity,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     /**
      * Check if bluetooth is enabled and request to enable it if not.
      */
     private fun checkAndRequestBluetooth(mainActivity: MainActivity) {
-        if (!isBluetoothEnabled()) {
-            ActivityCompat.startActivityForResult(mainActivity, Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), BLUETOOTH_REQUEST, null)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ActivityCompat.checkSelfPermission(
+                    mainActivity,
+                    Manifest.permission.BLUETOOTH_SCAN
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    mainActivity,
+                    arrayOf(
+                        Manifest.permission.BLUETOOTH_SCAN,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ),
+                    BLUETOOTH_REQUEST_S
+                )
+                return
+            }
+
         } else {
-            checkAndRequestAccessibility(mainActivity)
+            if (!isBluetoothEnabled()) {
+                ActivityCompat.startActivityForResult(
+                    mainActivity,
+                    Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+                    BLUETOOTH_REQUEST,
+                    null
+                )
+                return
+            }
         }
+        checkAndRequestAccessibility(mainActivity)
     }
 
     /**
@@ -83,8 +116,13 @@ object MainActivityHelpers {
     /**
      * Process and check permission results.
      */
-    fun onPermissionResult(mainActivity: MainActivity, permissions: Array<out String>, grantResults: IntArray) {
-        val locationPermissionIndex = permissions.indexOfFirst { it == Manifest.permission.ACCESS_FINE_LOCATION }
+    fun onPermissionResult(
+        mainActivity: MainActivity,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        val locationPermissionIndex =
+            permissions.indexOfFirst { it == Manifest.permission.ACCESS_FINE_LOCATION }
         if (locationPermissionIndex == -1) return
         if (grantResults[locationPermissionIndex] == PackageManager.PERMISSION_DENIED) {
             DialogFragmentFactory.getLimitedFunctionalityLocationPermissionInstance(
@@ -147,7 +185,8 @@ object MainActivityHelpers {
             {
                 it.dismiss()
             }
-        ).show(mainActivity.supportFragmentManager,
+        ).show(
+            mainActivity.supportFragmentManager,
             DIALOG_ACCESSIBILITY
         )
     }

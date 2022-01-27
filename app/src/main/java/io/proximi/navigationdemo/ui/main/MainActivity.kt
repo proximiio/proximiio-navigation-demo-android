@@ -1,7 +1,6 @@
 package io.proximi.navigationdemo.ui.main
 
 import android.animation.ValueAnimator
-import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.content.SharedPreferences
@@ -17,18 +16,20 @@ import android.widget.FrameLayout
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.*
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import io.proximi.mapbox.library.ProximiioMapbox
 import io.proximi.mapbox.library.RouteUpdateType
 import io.proximi.navigationdemo.ProximiioAuthToken
 import io.proximi.navigationdemo.R
 import io.proximi.navigationdemo.navigationservice.NavigationService
+import io.proximi.navigationdemo.ui.CustomMarkerHelper
 import io.proximi.navigationdemo.ui.SettingsActivity
 import io.proximi.navigationdemo.ui.SettingsActivity.Companion.ACCESSIBILITY_HAND_MODE
 import io.proximi.navigationdemo.ui.SettingsActivity.Companion.ACCESSIBILITY_HELP_BUTTON
@@ -88,13 +89,15 @@ class MainActivity : ScaledContextActivity() {
     /** Flag if activity is started. */
     private var started = false
 
+    private lateinit var customMarkerHelper: CustomMarkerHelper
+
+
     /* ------------------------------------------------------------------------------------------ */
     /* Activity lifecycle */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainActivityHelpers.onCreate()
-        viewModel = ViewModelProviders.of(this, MainActivityViewModelFactory(application))
-            .get(MainActivityViewModel::class.java)
+        viewModel = MainActivityViewModel(application)
 
         super.onCreate(savedInstanceState)
         setupDataObservers()
@@ -133,7 +136,7 @@ class MainActivity : ScaledContextActivity() {
             mapSetup = null
         }
 
-        
+
     }
 
     /**
@@ -203,9 +206,9 @@ class MainActivity : ScaledContextActivity() {
         // Process Bluetooth enable request result
         MainActivityHelpers.onBluetoothRequestResult(this, requestCode, resultCode)
         // Process navigation request data
-        if (requestCode == SEARCH_CODE && resultCode == Activity.RESULT_OK) {
-            data?.let { startNavigation(it) }
-        }
+//        if (requestCode == SEARCH_CODE && resultCode == Activity.RESULT_OK) {
+//            data?.let { startNavigation(it) }
+//        }
     }
 
     /**
@@ -328,6 +331,7 @@ class MainActivity : ScaledContextActivity() {
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync { mapboxMap ->
             map = mapboxMap
+
             // Create helper that handles map states based on navigation state and user interaction with map.
             mapModeHelper = MapModeHelper(mapboxMap, myLocationFab, toggleModeFab, this, viewModel)
             // Set mapbox location component heading type
@@ -360,6 +364,32 @@ class MainActivity : ScaledContextActivity() {
                         SearchItemDetailActivity.startForResult(this, SEARCH_CODE, feature)
                     } != null
             }
+
+            val proximiioMapbox =
+                ProximiioMapbox.getInstance(baseContext, ProximiioAuthToken.TOKEN, null)
+
+            customMarkerHelper =
+                CustomMarkerHelper(
+                    baseContext,
+                    this,
+                    mapboxMap,
+                    proximiioMapbox,
+                    viewModel.markersLiveData
+                )
+
+            viewModel.set(
+                listOf<com.mapbox.geojson.Feature>(
+                    com.mapbox.geojson.Feature.fromGeometry(
+                        Point.fromLngLat(24.921695923476054, 60.1671950369849)
+                    ),
+                    com.mapbox.geojson.Feature.fromGeometry(
+                        Point.fromLngLat(24.921695923476054, 60.16746993048443)
+                    ),
+                    com.mapbox.geojson.Feature.fromGeometry(
+                        Point.fromLngLat(24.921695923476054, 60.16714117139544)
+                    )
+                )
+            )
         }
     }
 

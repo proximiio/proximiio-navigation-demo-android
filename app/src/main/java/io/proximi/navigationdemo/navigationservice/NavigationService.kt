@@ -3,7 +3,7 @@ package io.proximi.navigationdemo.navigationservice
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -42,6 +42,7 @@ import io.proximi.proximiiolibrary.*
 import io.proximi.proximiiolibrary.routesnapping.database.PxWayfindingRoutable
 import java.util.*
 
+
 /**
  * Service to handle 'background' functionality (navigation) and creates an extra layer holding
  * necessary data.
@@ -57,7 +58,6 @@ class NavigationService : LifecycleService() {
     private var vibrator: Vibrator? = null
     private var mapboxMap: MapboxMap? = null
     private var handler = Handler()
-    private var simulationProcessor: ProximiioSimulationProcessor? = null
 
     companion object {
         const val NOTIFICATION_ID = 631
@@ -224,7 +224,7 @@ class NavigationService : LifecycleService() {
             baseContext,
             0,
             Intent(baseContext, MainActivity::class.java),
-            FLAG_UPDATE_CURRENT
+            FLAG_IMMUTABLE
         )
 
         createNotificationChannelHigh()
@@ -276,7 +276,7 @@ class NavigationService : LifecycleService() {
                 baseContext,
                 0,
                 Intent(baseContext, StopNavigationServiceReceiver::class.java),
-                0
+                FLAG_IMMUTABLE
             )
             notificationBuilder.addAction(
                 R.id.cancelRouteButton,
@@ -463,19 +463,14 @@ class NavigationService : LifecycleService() {
             notificationMode = ProximiioOptions.NotificationMode.DISABLED
         }
 
-        // setup processors
-        simulationProcessor = ProximiioSimulationProcessor(this)
-
         // Create Proximi.io API
         proximiioAPI = ProximiioAPI(TAG, this, options).apply {
             setAuth(ProximiioAuthToken.TOKEN, true)
             setListener(apiListener)
-            //pdrCorrectionThreshold(4.0)
-            //snapToRouteEnabled(true)
-            //snapToRouteThreshold(20.0)
+//            pdrCorrectionThreshold(4.0)
+            snapToRouteEnabled(true)
+            snapToRouteThreshold(20.0)
         }
-
-        proximiioAPI.setProcessors(arrayListOf(simulationProcessor))
     }
 
     /**
@@ -676,8 +671,6 @@ class NavigationService : LifecycleService() {
         val routesForCurrentFloor = currentRoute?.nodeList?.filter { it.level == currentFloor }
             ?.mapNotNull { it.lineStringFeatureTo }
             ?.map { PxWayfindingRoutable.fromGeoJsonFeature(it, null) }?.toCollection(ArrayList())
-
-        simulationProcessor?.set(routesForCurrentFloor ?: arrayListOf())
     }
 
     /**
