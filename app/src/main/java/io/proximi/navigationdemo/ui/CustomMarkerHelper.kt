@@ -75,7 +75,6 @@ class CustomMarkerHelper(
                 observerMarker.onChanged(features.value)
             }
         }
-
         features.observe(lifecycleOwner, observerMarker)
     }
 }
