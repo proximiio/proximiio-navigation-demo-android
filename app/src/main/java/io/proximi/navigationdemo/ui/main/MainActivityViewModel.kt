@@ -18,6 +18,7 @@ import io.proximi.mapbox.library.Route
 import io.proximi.mapbox.library.RouteCallback
 import io.proximi.mapbox.library.RouteConfiguration
 import io.proximi.navigationdemo.navigationservice.NavigationService
+import io.proximi.navigationdemo.ui.CustomMarker
 import io.proximi.navigationdemo.utils.CustomLocationComponentActivator
 import io.proximi.proximiiolibrary.ProximiioGeofence
 import io.proximi.proximiiolibrary.ProximiioPlace
@@ -49,7 +50,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val enteredGeofenceList =
         MutableLiveData<List<ProximiioGeofence>>().apply { postValue(listOf()) }
     private val markers =
-        MutableLiveData<List<com.mapbox.geojson.Feature>>().apply { postValue(listOf()) }
+        MutableLiveData<List<CustomMarker>>().apply { postValue(listOf()) }
 
     /* Public access for live data provided to activity. */
     val routeLiveData: LiveData<Route?> get() = route
@@ -64,7 +65,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val userLocationLiveData: LiveData<Location?> get() = userLocation
     val userPlaceLiveData: LiveData<ProximiioPlace?> = userPlace
     val enteredGeofenceListLiveData: LiveData<List<ProximiioGeofence>> get() = enteredGeofenceList
-    val markersLiveData: LiveData<List<com.mapbox.geojson.Feature>> get() = markers
+    val markersLiveData: LiveData<List<CustomMarker>> get() = markers
 
     /** Callback reference to start navigation. Necessary due to the service binding which might happen after activity is resumed and route start invoked. */
     private var routeStart: (() -> Unit)? = null
@@ -207,7 +208,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    public fun set(markers: List<com.mapbox.geojson.Feature>) {
+    fun set(markers: List<CustomMarker>) {
         this.markers.postValue(markers)
     }
 

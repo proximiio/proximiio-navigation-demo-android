@@ -29,7 +29,9 @@ import io.proximi.mapbox.library.RouteUpdateType
 import io.proximi.navigationdemo.ProximiioAuthToken
 import io.proximi.navigationdemo.R
 import io.proximi.navigationdemo.navigationservice.NavigationService
+import io.proximi.navigationdemo.ui.CustomMarker
 import io.proximi.navigationdemo.ui.CustomMarkerHelper
+import io.proximi.navigationdemo.ui.MARKER_ID
 import io.proximi.navigationdemo.ui.SettingsActivity
 import io.proximi.navigationdemo.ui.SettingsActivity.Companion.ACCESSIBILITY_HAND_MODE
 import io.proximi.navigationdemo.ui.SettingsActivity.Companion.ACCESSIBILITY_HELP_BUTTON
@@ -363,6 +365,17 @@ class MainActivity : ScaledContextActivity() {
                     .firstOrNull()?.let { feature ->
                         SearchItemDetailActivity.startForResult(this, SEARCH_CODE, feature)
                     } != null
+
+                // Query for markers
+                mapboxMap.queryRenderedFeatures(
+                    mapboxMap.projection.toScreenLocation(point),
+                    "layer.${MARKER_ID}"
+                )
+                    .map { poi -> viewModel.markersLiveData.value!!.firstOrNull { poi.id() == it.id } }
+                    .firstOrNull()?.let { marker ->
+                        // handle here tap on marker
+                        Log.d("MARKER", marker.toString())
+                    } != null
             }
 
             val proximiioMapbox =
@@ -378,15 +391,15 @@ class MainActivity : ScaledContextActivity() {
                 )
 
             viewModel.set(
-                listOf<com.mapbox.geojson.Feature>(
-                    com.mapbox.geojson.Feature.fromGeometry(
-                        Point.fromLngLat(24.921695923476054, 60.1671950369849)
+                listOf<CustomMarker>(
+                    CustomMarker(
+                        "m0", 1, Point.fromLngLat(24.921695923476054, 60.1671950369849)
                     ),
-                    com.mapbox.geojson.Feature.fromGeometry(
-                        Point.fromLngLat(24.921695923476054, 60.16746993048443)
+                    CustomMarker(
+                        "m1", 2, Point.fromLngLat(24.921695923476054, 60.16746993048443)
                     ),
-                    com.mapbox.geojson.Feature.fromGeometry(
-                        Point.fromLngLat(24.921695923476054, 60.16714117139544)
+                    CustomMarker(
+                        "m2", 3, Point.fromLngLat(24.921695923476054, 60.16714117139544)
                     )
                 )
             )
