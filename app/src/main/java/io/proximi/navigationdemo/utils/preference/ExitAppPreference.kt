@@ -10,13 +10,14 @@ import io.proximi.navigationdemo.navigationservice.NavigationService
 /**
  * Custom preference class that closes the application (i.e. closes the application UI and stops the service).
  */
-class ExitAppPreference(context: Context, attrs: AttributeSet?) : Preference(context, attrs), Preference.OnPreferenceClickListener {
+abstract class ExitAppPreference(context: Context, attrs: AttributeSet?) :
+    Preference(context, attrs), Preference.OnPreferenceClickListener {
 
     init {
         this.onPreferenceClickListener = this
     }
 
-    override fun onPreferenceClick(preference: Preference?): Boolean {
+    override fun onPreferenceClick(preference: Preference): Boolean {
         context.stopService(Intent(context, NavigationService::class.java))
         NotificationManagerCompat.from(context).cancel(NavigationService.NOTIFICATION_ID)
         val homeIntent = Intent(Intent.ACTION_MAIN)
