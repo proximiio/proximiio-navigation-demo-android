@@ -16,7 +16,8 @@ import io.proximi.navigationdemo.utils.ScaledContextActivity
 /**
  * Activity with application settings. Uses Android preferences.
  */
-class SettingsActivity : ScaledContextActivity(), PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
+class SettingsActivity : ScaledContextActivity(),
+    PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     override val defaultTheme = R.style.AppTheme_Settings
     override val highContrastTheme = R.style.HighContrastTheme_Settings
@@ -88,10 +89,14 @@ class SettingsActivity : ScaledContextActivity(), PreferenceFragmentCompat.OnPre
     /**
      * Overrides [onPreferenceStartFragment] to start nested preference fragment.
      */
-    override fun onPreferenceStartFragment(caller: PreferenceFragmentCompat, pref: Preference): Boolean {
+    override fun onPreferenceStartFragment(
+        caller: PreferenceFragmentCompat,
+        pref: Preference
+    ): Boolean {
         // Instantiate the new Fragment
         val args = pref.extras
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, pref.fragment)
+        val fragment =
+            supportFragmentManager.fragmentFactory.instantiate(classLoader, pref.fragment!!)
         fragment.arguments = args
         fragment.setTargetFragment(caller, 0)
         // Replace the existing Fragment with the new Fragment
@@ -126,7 +131,8 @@ class SettingsActivity : ScaledContextActivity(), PreferenceFragmentCompat.OnPre
     /**
      * Root settings fragment implementation.
      */
-    class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+    class SettingsFragment : PreferenceFragmentCompat(),
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -135,13 +141,13 @@ class SettingsActivity : ScaledContextActivity(), PreferenceFragmentCompat.OnPre
         override fun onResume() {
             super.onResume()
             requireActivity().title = getString(R.string.title_activity_settings)
-            preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-            onSharedPreferenceChanged(preferenceManager.sharedPreferences, ROUTE_AVOID_STAIRS)
-            onSharedPreferenceChanged(preferenceManager.sharedPreferences, ROUTE_AVOID_ELEVATORS)
+            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+            onSharedPreferenceChanged(preferenceManager.sharedPreferences!!, ROUTE_AVOID_STAIRS)
+            onSharedPreferenceChanged(preferenceManager.sharedPreferences!!, ROUTE_AVOID_ELEVATORS)
         }
 
         override fun onPause() {
-            preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+            preferenceManager.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
             super.onPause()
         }
 

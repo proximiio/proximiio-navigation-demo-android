@@ -5,7 +5,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.expressions.Expression
@@ -16,19 +15,19 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import io.proximi.mapbox.library.ProximiioMapbox
 import io.proximi.navigationdemo.R
 
-private val MARKER_ID = "marker.icon.id"
-private val MAPBOX_BASE_LAYER = "proximiio-pois-icons"
+const val MARKER_ID = "marker.icon.id"
+private const val MAPBOX_BASE_LAYER = "proximiio-pois-icons"
 
 class CustomMarkerHelper(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     private val mapboxMap: MapboxMap,
     private val proximiioMapbox: ProximiioMapbox,
-    private var features: LiveData<List<Feature>>
+    private var features: LiveData<List<CustomMarker>>
 ) {
     private val style: LiveData<String?> get() = proximiioMapbox.style
 
-    private val observerMarker = Observer<List<Feature>> {
+    private val observerMarker = Observer<List<CustomMarker>> {
         mapboxMap.getStyle { style ->
             val source = style.getSource("source.$MARKER_ID") as? GeoJsonSource
                 ?: GeoJsonSource("source.$MARKER_ID").apply { style.addSource(this) }
@@ -61,11 +60,11 @@ class CustomMarkerHelper(
                 )
             }
 
-            it.forEach { feature ->
-                feature.addStringProperty("image", "image.$MARKER_ID")
+            it.forEach { marker ->
+                marker.feature.addStringProperty("image", "image.$MARKER_ID")
             }
 
-            source.setGeoJson(FeatureCollection.fromFeatures(it))
+            source.setGeoJson(FeatureCollection.fromFeatures(it.map { marker -> marker.feature }))
         }
     }
 
