@@ -672,15 +672,16 @@ class MainActivity : ScaledContextActivity() {
      * @return true if location is supported.
      */
     fun checkSupportedPlace(): Boolean {
-        return if (viewModel.userPlaceLiveData.value == null && viewModel.enteredGeofenceListLiveData.value?.isEmpty() == true) {
-            if (started) {
-                LocationNotCoveredDialogFragment.newInstance { it.dismiss() }
-                    .show(supportFragmentManager, null)
-            }
-            false
-        } else {
-            true
-        }
+//        return if (viewModel.userPlaceLiveData.value == null && viewModel.enteredGeofenceListLiveData.value?.isEmpty() == true) {
+//            if (started) {
+//                LocationNotCoveredDialogFragment.newInstance { it.dismiss() }
+//                    .show(supportFragmentManager, null)
+//            }
+//            false
+//        } else {
+//            true
+//        }
+        return true
     }
 
 }
